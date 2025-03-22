@@ -80,11 +80,11 @@ export default function Home() {
     try {
       // Get the current wallet address from state or try to fetch it
       let addressToUse = walletAddress;
-      
+
       if (!addressToUse) {
         // Try to get the wallet address from MiniKit if not in state
         const miniKitAddress = MiniKit.user?.walletAddress;
-        
+
         if (miniKitAddress) {
           // Update state if we got a valid address
           setWalletAddress(miniKitAddress);
@@ -140,12 +140,16 @@ export default function Home() {
     <main className={styles.main}>
       {isInWorldApp ? (
         <>
-          {walletAddress && (
+          {
+            // walletAddress &&
             <div className={styles.walletAddressContainer}>
               <span className={styles.walletAddressLabel}>Wallet Address:</span>
               <span className={styles.walletAddressValue}>{walletAddress}</span>
+              <span className={styles.walletAddressValue}>
+                {JSON.stringify(MiniKit.user)}
+              </span>
             </div>
-          )}
+          }
           <button onClick={handleClick} disabled={loading}>
             {loading ? "Loading..." : "Click Me!"}
           </button>
