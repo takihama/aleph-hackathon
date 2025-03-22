@@ -218,6 +218,17 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <>
+        {/* Add authentication button at the top */}
+        <div className={styles.walletAddressContainer}>
+          <button
+            onClick={authenticateWallet}
+            disabled={loading}
+            className={styles.button}
+          >
+            {loading ? "Authenticating..." : "Authenticate Wallet"}
+          </button>
+        </div>
+
         <div>
           {hasPermission && (
             <button onClick={sendNotification} disabled={loading}>
@@ -229,8 +240,8 @@ export default function Home() {
         {/* Add the payment section */}
         <div className={styles.paymentSection}>
           <h3>Make a Payment</h3>
-          <h3>${MiniKit.user?.username}</h3>
-          <h3>${MiniKit.user?.walletAddress}</h3>
+          <h3>{JSON.stringify(MiniKit.user)}</h3>
+          <h3>{MiniKit.user?.walletAddress}</h3>
 
           {/* Payment amount input */}
           <div className={styles.inputGroup}>
