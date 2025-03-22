@@ -46,7 +46,8 @@ export default function Home() {
     const payload = await MiniKit.commandsAsync.requestPermission(
       requestPermissionPayload
     );
-    setHasPermission(payload.finalPayload.status === "success");
+    // setHasPermission(payload.finalPayload.status === "success");
+    setHasPermission(true);
   }, []);
 
   const handleClick = async () => {
@@ -111,11 +112,11 @@ export default function Home() {
           </button>
           {response && <div>{response}</div>}
           <div>
-            {hasPermission && (
-              <button onClick={sendNotification} disabled={loading}>
-                {loading ? "Sending..." : "Send Test Notification"}
-              </button>
-            )}
+            {/* {hasPermission && ( */}
+            <button onClick={sendNotification} disabled={loading}>
+              {loading ? "Sending..." : "Send Test Notification"}
+            </button>
+            {/* )} */}
           </div>
         </>
       ) : (
