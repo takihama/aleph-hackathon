@@ -38,10 +38,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (MiniKit.user?.username && MiniKit.user?.walletAddress) {
-      saveUserToDatabase();
-    }
-  }, [walletAddress]);
+    saveUserToDatabase();
+  }, [walletAddress, MiniKit.user]);
 
   const requestPermission = useCallback(async () => {
     const requestPermissionPayload: RequestPermissionPayload = {
