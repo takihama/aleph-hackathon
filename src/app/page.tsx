@@ -34,7 +34,7 @@ export default function Home() {
       // Your API call here
       const result = await new Promise((resolve) => {
         setTimeout(() => {
-          resolve({ message: "Success! API responded." });
+          resolve({ message: "En tu cara man." });
         }, 1000);
       });
       setResponse((result as any).message);
