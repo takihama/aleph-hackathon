@@ -14,44 +14,17 @@ import { createWorldAppDeepLink } from "@/lib/deeplink";
 import { ethers } from "ethers";
 
 export default function Home() {
-  const [isInWorldApp, setIsInWorldApp] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<any>({});
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [paymentAmount, setPaymentAmount] = useState("10"); // Default payment amount
-  const [pageLoadTimestamp, setPageLoadTimestamp] = useState(Date.now());
 
   useEffect(() => {
-    // Add debugging information
-    const checkEnvironment = () => {
-      const isInstalled = MiniKit.isInstalled();
-
-      // Collect debug info
-      setDebugInfo({
-        isInstalled,
-        isMiniKitDefined: typeof MiniKit !== "undefined",
-        userAgent: window.navigator.userAgent,
-        windowObject: Object.keys(window).includes("MiniKit"),
-      });
-
-      // // Get wallet address if available
-      // if (isInstalled && MiniKit.user?.walletAddress) {
-      //   setWalletAddress(MiniKit.user.walletAddress);
-      // }
-    };
-
-    checkEnvironment();
-
     // Auto-authenticate every time the app loads
     const autoAuthenticateUser = async () => {
       const isInstalled = MiniKit.isInstalled();
-      if (isInstalled) {
-        // Always reset the wallet address to force re-authentication
-        setWalletAddress(null);
-        // Force authentication every time
+      if (isInstalled && !walletAddress) {
         await authenticateWallet();
       }
     };
@@ -64,6 +37,12 @@ export default function Home() {
     requestPermission();
   }, []);
 
+  useEffect(() => {
+    if (MiniKit.user?.username && MiniKit.user?.walletAddress) {
+      saveUserToDatabase();
+    }
+  }, [walletAddress]);
+
   const requestPermission = useCallback(async () => {
     const requestPermissionPayload: RequestPermissionPayload = {
       permission: Permission.Notifications,
@@ -71,7 +50,7 @@ export default function Home() {
     const payload = await MiniKit.commandsAsync.requestPermission(
       requestPermissionPayload
     );
-    // setHasPermission(payload.finalPayload.status === "success");
+
     setHasPermission(true);
   }, []);
 
@@ -89,7 +68,6 @@ export default function Home() {
 
         if (miniKitAddress) {
           // Update state if we got a valid address
-          setWalletAddress(miniKitAddress);
           addressToUse = miniKitAddress;
         } else {
           setStatus("Error: Could not get your wallet address");
@@ -168,12 +146,6 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    if (MiniKit.user?.username && MiniKit.user?.walletAddress) {
-      saveUserToDatabase();
-    }
-  }, [MiniKit.user]);
-
   // Add a function to authenticate the user
   const authenticateWallet = async () => {
     setLoading(true);
@@ -187,6 +159,10 @@ export default function Home() {
         nonce: nonce,
         statement: "Connect your wallet to receive notifications",
       });
+
+      if (result?.finalPayload.status === "success") {
+        setWalletAddress(result?.finalPayload.address);
+      }
     } catch (error) {
       console.error("Authentication error:", error);
       setStatus(
@@ -239,57 +215,9 @@ export default function Home() {
     );
   };
 
-  // Force authentication every time
-  const forceAuthentication = async () => {
-    // Clear existing wallet address
-    setWalletAddress(null);
-
-    // Always run authentication
-    return authenticateWallet();
-  };
-
-  // Use a timestamp to force re-authentication on each page load
-  useEffect(() => {
-    // This effect will run on every page load due to timestamp change
-    const forceAuth = async () => {
-      const isInstalled = MiniKit.isInstalled();
-      if (isInstalled) {
-        setWalletAddress(null);
-        await authenticateWallet();
-      }
-    };
-
-    forceAuth();
-  }, [pageLoadTimestamp]); // Depends on timestamp that changes on each load
-
-  // Set a new timestamp on component mount
-  useEffect(() => {
-    setPageLoadTimestamp(Date.now());
-  }, []);
-
-  // Clear any stored authentication when component mounts
-  useEffect(() => {
-    // Clear any localStorage items related to authentication
-    localStorage.removeItem("lastAuthTime");
-    localStorage.removeItem("walletAuthState");
-
-    // Force new authentication
-    if (MiniKit.isInstalled()) {
-      authenticateWallet();
-    }
-  }, []);
-
   return (
     <main className={styles.main}>
       <>
-        <div className={styles.walletAddressContainer}>
-          {!walletAddress && (
-            <button onClick={forceAuthentication} disabled={loading}>
-              {loading ? "Authenticating..." : "Connect Wallet"}
-            </button>
-          )}
-        </div>
-        {response && <div>{response}</div>}
         <div>
           {hasPermission && (
             <button onClick={sendNotification} disabled={loading}>
