@@ -5,6 +5,16 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
+    if (!body.worldcoin_username || !body.worldcoin_address) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Worldcoin username and address are required",
+        },
+        { status: 400 }
+      );
+    }
+
     // Validate required fields
     const {
       address,
