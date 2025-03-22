@@ -189,16 +189,7 @@ export default function Home() {
       {isInWorldApp ? (
         <>
           <div className={styles.walletAddressContainer}>
-            {walletAddress ? (
-              <>
-                <span className={styles.walletAddressLabel}>
-                  Wallet Address:
-                </span>
-                <span className={styles.walletAddressValue}>
-                  {walletAddress}
-                </span>
-              </>
-            ) : (
+            {!walletAddress && (
               <button onClick={authenticateWallet} disabled={loading}>
                 {loading ? "Authenticating..." : "Connect Wallet"}
               </button>
@@ -209,11 +200,11 @@ export default function Home() {
           </button>
           {response && <div>{response}</div>}
           <div>
-            {/* {hasPermission && ( */}
-            <button onClick={sendNotification} disabled={loading}>
-              {loading ? "Sending..." : "Send Test Notification"}
-            </button>
-            {/* )} */}
+            {hasPermission && (
+              <button onClick={sendNotification} disabled={loading}>
+                {loading ? "Sending..." : "Send Test Notification"}
+              </button>
+            )}
           </div>
 
           {/* Add the payment section */}
