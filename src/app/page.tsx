@@ -136,20 +136,53 @@ export default function Home() {
     }
   };
 
+  // Add a function to authenticate the user
+  const authenticateWallet = async () => {
+    setLoading(true);
+    setStatus("Authenticating wallet...");
+    
+    try {
+      // Generate a random nonce (in production this should come from your server)
+      const nonce = Math.random().toString(36).substring(2, 10);
+      
+      const result = await MiniKit.commandsAsync.walletAuth({
+        nonce: nonce,
+        statement: "Connect your wallet to receive notifications"
+      });
+      
+      if (result.finalPayload.status === "success") {
+        // After successful auth, MiniKit.user should be available
+        const address = result.finalPayload.address;
+        setWalletAddress(address);
+        setStatus("Wallet authenticated successfully!");
+        console.log("User data:", MiniKit.user);
+      } else {
+        setStatus("Authentication failed");
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      setStatus(`Error authenticating: ${error instanceof Error ? error.message : "Unknown error"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className={styles.main}>
       {isInWorldApp ? (
         <>
-          {
-            // walletAddress &&
-            <div className={styles.walletAddressContainer}>
-              <span className={styles.walletAddressLabel}>Wallet Address:</span>
-              <span className={styles.walletAddressValue}>{walletAddress}</span>
-              <span className={styles.walletAddressValue}>
-                {JSON.stringify(MiniKit.user)}
-              </span>
-            </div>
-          }
+          <div className={styles.walletAddressContainer}>
+            {walletAddress ? (
+              <>
+                <span className={styles.walletAddressLabel}>Wallet Address:</span>
+                <span className={styles.walletAddressValue}>{walletAddress}</span>
+              </>
+            ) : (
+              <button onClick={authenticateWallet} disabled={loading}>
+                {loading ? "Authenticating..." : "Connect Wallet"}
+              </button>
+            )}
+          </div>
           <button onClick={handleClick} disabled={loading}>
             {loading ? "Loading..." : "Click Me!"}
           </button>
