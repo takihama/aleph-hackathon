@@ -11,7 +11,7 @@ export async function POST(request: Request) {
       { error: 'API configuration missing' }, 
       { status: 500 }
     )
-  }
+  } 
 
   try {
     const body = await request.json()
