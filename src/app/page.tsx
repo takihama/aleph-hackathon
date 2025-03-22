@@ -87,6 +87,7 @@ export default function Home() {
 
       const data = await response.json();
 
+      console.log("response");
       console.log("data", data);
       if (data.success) {
         setStatus("Notification sent successfully!");
