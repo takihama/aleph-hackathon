@@ -37,10 +37,10 @@ export default function Home() {
         windowObject: Object.keys(window).includes("MiniKit"),
       });
 
-      // Get wallet address if available
-      if (isInstalled && MiniKit.user?.walletAddress) {
-        setWalletAddress(MiniKit.user.walletAddress);
-      }
+      // // Get wallet address if available
+      // if (isInstalled && MiniKit.user?.walletAddress) {
+      //   setWalletAddress(MiniKit.user.walletAddress);
+      // }
     };
 
     checkEnvironment();
