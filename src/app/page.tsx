@@ -74,7 +74,7 @@ export default function Home() {
     try {
       // Get the wallet address from MiniKit.user
       console.error(MiniKit.user);
-      const walletAddress = MiniKit.user?.walletAddress;
+      const walletAddress = "0x8082a0bad443945b845b73ad97afbd52250fc92a";
 
       if (!walletAddress) {
         setStatus("Error: Could not get your wallet address");
