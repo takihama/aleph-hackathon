@@ -6,9 +6,10 @@ import {
   Permission,
   RequestPermissionPayload,
 } from "@worldcoin/minikit-js";
-import styles from "./page.module.css";
+import { getAddress } from "viem";
+import { mantleMNT } from "@daimo/contract";
 import { DaimoPayButton } from "@daimo/pay";
-import { mantleBridgedUSDC, mantleMNT } from "@daimo/contract";
+import styles from "./page.module.css";
 
 export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
@@ -225,13 +226,12 @@ export default function Home() {
 
           <DaimoPayButton
             appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-            toAddress={
-              process.env
-                .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
-            }
+            toAddress={getAddress(
+              process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS!
+            )}
             toChain={mantleMNT.chainId}
             toUnits={paymentAmount}
-            toToken={mantleMNT.token as `0x${string}`}
+            toToken={getAddress(mantleMNT.token)}
             metadata={{
               appName: "WorldApp Mini Test",
             }}
