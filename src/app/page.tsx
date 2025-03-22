@@ -213,9 +213,10 @@ export default function Home() {
             <DaimoPayButton
               appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
               toAddress={
-                process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
+                process.env
+                  .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
               }
-              toChain={137} // Polygon
+              toChain={5000}
               toUnits="0.10" // $0.10 in Polygon USDC
               toToken="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" // Polygon USDC
               onPaymentStarted={handlePaymentStarted}
