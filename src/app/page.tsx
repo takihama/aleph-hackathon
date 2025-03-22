@@ -72,34 +72,36 @@ export default function Home() {
     setStatus("Sending notification...");
 
     try {
+      // Make sure you have a valid wallet address
+      // For testing, you can use your own wallet address from the WorldApp
+      const testWalletAddress = "0x123..."; // Replace with a real wallet address
+      
       const response = await fetch("/api/notifications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          wallet_addresses: ["0x0000000000000000000000000000000000000000"], // Use the user's wallet address
+          wallet_addresses: [testWalletAddress],
           title: "Hello from Your App!",
           message: "This is a test notification from your WorldApp mini-app.",
-          path: "/notification-received", // Optional: specific path to open when notification is clicked
+          path: "/notification-received",
         }),
       });
 
       const data = await response.json();
-
-      console.log("response");
-      console.log("data", data);
-      if (data.success) {
+      console.log("Notification API response:", data);
+      
+      if (response.ok && data.success) {
         setStatus("Notification sent successfully!");
         console.log("Delivery results:", data.result);
       } else {
-        setStatus(
-          `Failed to send notification: ${data.error || "Unknown error"}`
-        );
+        setStatus(`Failed to send notification: ${data.error || "Unknown error"}`);
+        console.error("Error details:", data.details || "No details provided");
       }
     } catch (error) {
-      setStatus("Error sending notification");
-      console.error("Error:", error);
+      console.error("Error sending notification:", error);
+      setStatus(`Error sending notification: ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setLoading(false);
     }
