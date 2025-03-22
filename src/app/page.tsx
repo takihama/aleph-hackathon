@@ -72,17 +72,25 @@ export default function Home() {
     setStatus("Sending notification...");
 
     try {
-      // Make sure you have a valid wallet address
-      // For testing, you can use your own wallet address from the WorldApp
-      const testWalletAddress = "0x123..."; // Replace with a real wallet address
-      
+      // Get the wallet address from MiniKit.user
+      const walletAddress = MiniKit.user?.walletAddress;
+
+      if (!walletAddress) {
+        setStatus("Error: Could not get your wallet address");
+        setLoading(false);
+        return;
+      }
+
+      console.log("Using wallet address:", walletAddress);
+
+      // Use the wallet address for the notification
       const response = await fetch("/api/notifications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          wallet_addresses: [testWalletAddress],
+          wallet_addresses: [walletAddress],
           title: "Hello from Your App!",
           message: "This is a test notification from your WorldApp mini-app.",
           path: "/notification-received",
@@ -91,17 +99,23 @@ export default function Home() {
 
       const data = await response.json();
       console.log("Notification API response:", data);
-      
+
       if (response.ok && data.success) {
         setStatus("Notification sent successfully!");
         console.log("Delivery results:", data.result);
       } else {
-        setStatus(`Failed to send notification: ${data.error || "Unknown error"}`);
+        setStatus(
+          `Failed to send notification: ${data.error || "Unknown error"}`
+        );
         console.error("Error details:", data.details || "No details provided");
       }
     } catch (error) {
       console.error("Error sending notification:", error);
-      setStatus(`Error sending notification: ${error instanceof Error ? error.message : "Unknown error"}`);
+      setStatus(
+        `Error sending notification: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     } finally {
       setLoading(false);
     }
