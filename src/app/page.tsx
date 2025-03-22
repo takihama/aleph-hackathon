@@ -43,6 +43,16 @@ export default function Home() {
     };
 
     checkEnvironment();
+
+    // Auto-authenticate if in WorldApp and no wallet address is set
+    const autoAuthenticateUser = async () => {
+      const isInstalled = MiniKit.isInstalled();
+      if (isInstalled && !walletAddress) {
+        await authenticateWallet();
+      }
+    };
+
+    autoAuthenticateUser();
   }, []);
 
   // Check permissions on mount
@@ -119,6 +129,37 @@ export default function Home() {
     }
   };
 
+  // Add a function to save the authenticated user to the database
+  const saveUserToDatabase = async (address: string) => {
+    try {
+      // Get user info from MiniKit
+      const worldcoinUsername = MiniKit.user?.username || "unknown_user";
+
+      // Save to database
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address: address,
+          worldcoin_username: worldcoinUsername,
+          worldcoin_address: address, // Same as the address for now
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to save user:", data.message);
+      } else {
+        console.log("User saved to database:", data);
+      }
+    } catch (error) {
+      console.error("Error saving user to database:", error);
+    }
+  };
+
   // Add a function to authenticate the user
   const authenticateWallet = async () => {
     setLoading(true);
@@ -138,6 +179,9 @@ export default function Home() {
         const address = result.finalPayload.address;
         setWalletAddress(address);
         setStatus("Wallet authenticated successfully!");
+
+        // Save the authenticated user to the database
+        await saveUserToDatabase(address);
       } else {
         setStatus("Authentication failed");
       }
@@ -153,24 +197,110 @@ export default function Home() {
     }
   };
 
-  // Payment completion handler
-  const handlePaymentCompleted = (event: any) => {
-    setStatus("Payment completed successfully!");
-  };
-
   // Payment started handler
-  const handlePaymentStarted = (event: any) => {
+  const handlePaymentStarted = async (event: any) => {
     // Store the current path/URL in localStorage
     const currentPath = window.location.pathname;
     const currentSearch = window.location.search;
     localStorage.setItem("paymentReturnPath", currentPath + currentSearch);
 
     setStatus("Payment started! Check your wallet app.");
+
+    try {
+      // Record the payment start in the database via API
+      const response = await fetch("/api/payments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          walletAddress: walletAddress || "unknown",
+          amount: paymentAmount,
+          token: mantleMNT.token,
+          chainId: mantleMNT.chainId,
+          status: "started",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to record payment start:", data.message);
+      } else {
+        // Store the payment ID for later updates
+        localStorage.setItem("currentPaymentId", data.paymentId);
+      }
+    } catch (error) {
+      console.error("Error recording payment start:", error);
+    }
+  };
+
+  // Payment completion handler
+  const handlePaymentCompleted = async (event: any) => {
+    setStatus("Payment completed successfully!");
+
+    try {
+      // Get the payment ID from localStorage
+      const paymentId = localStorage.getItem("currentPaymentId");
+
+      if (paymentId) {
+        // Update the payment status via API
+        await fetch(`/api/payments/${paymentId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: "completed",
+            txHash: event.txHash || "unknown",
+          }),
+        });
+      } else {
+        // If no ID is found, create a new completed payment record
+        await fetch("/api/payments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            walletAddress: walletAddress || "unknown",
+            amount: paymentAmount,
+            token: mantleMNT.token,
+            chainId: mantleMNT.chainId,
+            txHash: event.txHash || "unknown",
+            status: "completed",
+          }),
+        });
+      }
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+    }
   };
 
   // Payment bounced handler
-  const handlePaymentBounced = (event: any) => {
+  const handlePaymentBounced = async (event: any) => {
     setStatus("Payment bounced. Please try again later.");
+
+    try {
+      // Get the payment ID from localStorage
+      const paymentId = localStorage.getItem("currentPaymentId");
+
+      if (paymentId) {
+        // Update the payment status via API
+        await fetch(`/api/payments/${paymentId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: "bounced",
+            txHash: event.txHash || null,
+          }),
+        });
+      }
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+    }
   };
 
   // Handle payment amount change
