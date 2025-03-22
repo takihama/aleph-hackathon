@@ -9,6 +9,10 @@ import {
 import styles from "./page.module.css";
 import { DaimoPayButton } from "@daimo/pay";
 
+const TokenDict = {
+  USDt: "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE" as `0x${string}`,
+};
+
 export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,6 +21,7 @@ export default function Home() {
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [paymentAmount, setPaymentAmount] = useState("10"); // Default payment amount
 
   useEffect(() => {
     // Add debugging information
@@ -173,6 +178,16 @@ export default function Home() {
     setStatus("Payment bounced. Please try again later.");
   };
 
+  // Handle payment amount change
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Ensure valid number format
+    const value = e.target.value;
+    // Allow empty input, numbers, and numbers with decimal point
+    if (value === "" || /^\d+(\.\d{0,2})?$/.test(value)) {
+      setPaymentAmount(value);
+    }
+  };
+
   return (
     <main className={styles.main}>
       <>
@@ -195,31 +210,38 @@ export default function Home() {
         {/* Add the payment section */}
         <div className={styles.paymentSection}>
           <h3>Make a Payment</h3>
-          <p>Debug: Click should open payment flow</p>
-          <div className={styles.walletNotice}>
-            <p>
-              If you have MetaMask installed, the payment will use your MetaMask
-              wallet.
+          
+          {/* Payment amount input */}
+          <div className={styles.inputGroup}>
+            <label htmlFor="payment-amount" className={styles.inputLabel}>Payment Amount (USDT)</label>
+            <div className={styles.inputWithUnit}>
+              <input
+                id="payment-amount"
+                type="text"
+                value={paymentAmount}
+                onChange={handleAmountChange}
+                className={styles.amountInput}
+                placeholder="Enter amount"
+                min="0.01"
+                max="1000"
+              />
+            </div>
+            <p className={styles.helperText}>
+              Enter the amount of USDT you want to send on Mantle chain.
+              <br />
+              Min: 0.01 USDT | Max: 1000 USDT
             </p>
-            {/* Add information about WalletConnect as a fallback */}
-            <p>You can also use WalletConnect with any mobile wallet.</p>
           </div>
+          
           <DaimoPayButton
-            appId={process.env.NEXT_PUBLIC_DAIMO_PAY_APP_ID || "pay-demo"}
-            toAddress="0x1234567890123456789012345678901234567890" // Replace with your actual address
-            toChain={137} // Polygon
-            toUnits="0.10" // $0.10 in Polygon USDC
-            toToken="0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174" // Polygon USDC
-            intent="Test Payment"
-            paymentOptions={["Coinbase", "Binance"]}
-            preferredChains={[137]} // Prefer Polygon
-            preferredTokens={[
-              {
-                chain: 137,
-                address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-              },
-            ]}
-            externalId="test-payment-123"
+            appId={process.env.NEXT_PUBLIC_DAIMO_PAY_APP_ID!}
+            toAddress={
+              process.env
+                .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
+            }
+            toChain={5000}
+            toUnits={paymentAmount} // Use the dynamic payment amount here
+            toToken={TokenDict.USDt}
             metadata={{
               appName: "WorldApp Mini Test",
               isMobile: "true", // Indicate this is a mobile app as string
