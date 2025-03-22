@@ -168,6 +168,12 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    if (MiniKit.user?.username && MiniKit.user?.walletAddress) {
+      saveUserToDatabase();
+    }
+  }, [MiniKit.user]);
+
   // Add a function to authenticate the user
   const authenticateWallet = async () => {
     setLoading(true);
@@ -181,19 +187,6 @@ export default function Home() {
         nonce: nonce,
         statement: "Connect your wallet to receive notifications",
       });
-
-      if (result.finalPayload.status === "success") {
-        // After successful auth, MiniKit.user should be available
-        const address = result.finalPayload.address;
-
-        setWalletAddress(address);
-        setStatus("Wallet authenticated successfully!");
-
-        // Save the authenticated user to the database
-        await saveUserToDatabase();
-      } else {
-        setStatus("Authentication failed");
-      }
     } catch (error) {
       console.error("Authentication error:", error);
       setStatus(
@@ -250,7 +243,7 @@ export default function Home() {
   const forceAuthentication = async () => {
     // Clear existing wallet address
     setWalletAddress(null);
-    
+
     // Always run authentication
     return authenticateWallet();
   };
@@ -265,7 +258,7 @@ export default function Home() {
         await authenticateWallet();
       }
     };
-    
+
     forceAuth();
   }, [pageLoadTimestamp]); // Depends on timestamp that changes on each load
 
@@ -277,9 +270,9 @@ export default function Home() {
   // Clear any stored authentication when component mounts
   useEffect(() => {
     // Clear any localStorage items related to authentication
-    localStorage.removeItem('lastAuthTime');
-    localStorage.removeItem('walletAuthState');
-    
+    localStorage.removeItem("lastAuthTime");
+    localStorage.removeItem("walletAuthState");
+
     // Force new authentication
     if (MiniKit.isInstalled()) {
       authenticateWallet();
