@@ -10,6 +10,7 @@ import { getAddress } from "viem";
 import { mantleMNT } from "@daimo/contract";
 import { DaimoPayButton } from "@daimo/pay";
 import styles from "./page.module.css";
+import { createWorldAppDeepLink } from "@/lib/deeplink";
 
 export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
@@ -159,7 +160,12 @@ export default function Home() {
 
   // Payment started handler
   const handlePaymentStarted = (event: any) => {
-    setStatus("Payment started...");
+    // Store the current path/URL in localStorage
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+    localStorage.setItem("paymentReturnPath", currentPath + currentSearch);
+
+    setStatus("Payment started! Check your wallet app.");
   };
 
   // Payment bounced handler
@@ -175,6 +181,21 @@ export default function Home() {
     if (value === "" || /^\d+(\.\d{0,2})?$/.test(value)) {
       setPaymentAmount(value);
     }
+  };
+
+  // Generate a dynamic deep link that uses the current path
+  const getReturnDeepLink = () => {
+    // Get current path if available, otherwise use a default path
+    const currentPath =
+      typeof window !== "undefined" ? window.location.pathname || "/" : "/";
+
+    return createWorldAppDeepLink(
+      process.env.WORLDAPP_APP_ID || "",
+      currentPath, // Use the current path instead of a fixed one
+      {
+        timestamp: Date.now().toString(), // Add a unique identifier
+      }
+    );
   };
 
   return (
@@ -232,6 +253,7 @@ export default function Home() {
             toChain={mantleMNT.chainId}
             toUnits={paymentAmount}
             toToken={getAddress(mantleMNT.token)}
+            redirectReturnUrl={getReturnDeepLink()}
             metadata={{
               appName: "WorldApp Mini Test",
             }}
