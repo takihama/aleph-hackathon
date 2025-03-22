@@ -8,13 +8,21 @@ export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<any>({});
 
   useEffect(() => {
-    // Check if the app is running inside WorldApp
+    // Add debugging information
     const checkEnvironment = () => {
       const isInstalled = MiniKit.isInstalled();
       setIsInWorldApp(isInstalled);
-      console.log("Running in WorldApp:", isInstalled);
+      
+      // Collect debug info
+      setDebugInfo({
+        isInstalled,
+        isMiniKitDefined: typeof MiniKit !== 'undefined',
+        userAgent: window.navigator.userAgent,
+        windowObject: Object.keys(window).includes('MiniKit')
+      });
     };
 
     checkEnvironment();
@@ -47,7 +55,13 @@ export default function Home() {
           {response && <div>{response}</div>}
         </>
       ) : (
-        <div>Please open this app in WorldApp</div>
+        <div>
+          <div>Please open this app in WorldApp</div>
+          <pre style={{ fontSize: '12px', marginTop: '20px' }}>
+            Debug Info:
+            {JSON.stringify(debugInfo, null, 2)}
+          </pre>
+        </div>
       )}
     </main>
   );

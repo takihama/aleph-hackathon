@@ -1,13 +1,25 @@
 'use client'
 
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { MiniKit } from '@worldcoin/minikit-js'
 
 export default function MiniKitProvider({ children }: { children: ReactNode }) {
+    const [isInitialized, setIsInitialized] = useState(false)
+
     useEffect(() => {
-        // Passing appId in the install is optional 
-        MiniKit.install()
+        try {
+            MiniKit.install()
+            console.log('MiniKit installed successfully')
+            setIsInitialized(true)
+        } catch (error) {
+            console.error('MiniKit installation error:', error)
+        }
     }, [])
+
+    // Add loading state if needed
+    if (!isInitialized) {
+        return <div>Loading...</div>
+    }
 
     return <>{children}</>
 } 

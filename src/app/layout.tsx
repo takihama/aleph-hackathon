@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "A WorldApp Mini Application",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
