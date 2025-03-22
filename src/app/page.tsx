@@ -8,7 +8,7 @@ import {
 } from "@worldcoin/minikit-js";
 import styles from "./page.module.css";
 import { DaimoPayButton } from "@daimo/pay";
-import { mantleBridgedUSDC } from "@daimo/contract";
+import { mantleBridgedUSDC, mantleMNT } from "@daimo/contract";
 
 export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
@@ -229,9 +229,9 @@ export default function Home() {
               process.env
                 .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
             }
-            toChain={mantleBridgedUSDC.chainId}
+            toChain={mantleMNT.chainId}
             toUnits={paymentAmount}
-            toToken={mantleBridgedUSDC.token as `0x${string}`}
+            toToken={mantleMNT.token as `0x${string}`}
             metadata={{
               appName: "WorldApp Mini Test",
             }}
