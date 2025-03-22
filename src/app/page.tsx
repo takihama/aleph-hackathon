@@ -34,6 +34,20 @@ export default function Home() {
     checkEnvironment();
   }, []);
 
+  // Check permissions on mount
+  useEffect(() => {
+    requestPermission();
+  }, []);
+
+  const requestPermission = useCallback(async () => {
+    const requestPermissionPayload: RequestPermissionPayload = {
+      permission: Permission.Notifications,
+    };
+    const payload = await MiniKit.commandsAsync.requestPermission(
+      requestPermissionPayload
+    );
+  }, []);
+
   const handleClick = async () => {
     try {
       setLoading(true);
@@ -51,17 +65,10 @@ export default function Home() {
     }
   };
 
-  const requestPermission = useCallback(async () => {
-    const requestPermissionPayload: RequestPermissionPayload = {
-      permission: Permission.Notifications,
-    };
-    const payload = await MiniKit.commandsAsync.requestPermission(
-      requestPermissionPayload
-    );
-  }, []);
-
   const sendNotification = async () => {
     setLoading(true);
+    setStatus("Sending notification...");
+
     try {
       const response = await fetch("/api/notifications", {
         method: "POST",
@@ -69,10 +76,10 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          wallet_addresses: ["0x123..."], // Add target wallet addresses
-          title: "Test Notification",
-          message: "This is a test notification from your app!",
-          path: "/some-path", // Optional: specific path in your app
+          wallet_addresses: ["0x0000000000000000000000000000000000000000"], // Use the user's wallet address
+          title: "Hello from Your App!",
+          message: "This is a test notification from your WorldApp mini-app.",
+          path: "/notification-received", // Optional: specific path to open when notification is clicked
         }),
       });
 
@@ -82,7 +89,9 @@ export default function Home() {
         setStatus("Notification sent successfully!");
         console.log("Delivery results:", data.result);
       } else {
-        setStatus("Failed to send notification");
+        setStatus(
+          `Failed to send notification: ${data.error || "Unknown error"}`
+        );
       }
     } catch (error) {
       setStatus("Error sending notification");
@@ -101,12 +110,10 @@ export default function Home() {
           </button>
           {response && <div>{response}</div>}
           <div>
-            <button onClick={requestPermission}>
-              Request Notification Permission
-            </button>
-
             {hasPermission && (
-              <button onClick={sendNotification}>Send Test Notification</button>
+              <button onClick={sendNotification} disabled={loading}>
+                {loading ? "Sending..." : "Send Test Notification"}
+              </button>
             )}
           </div>
         </>
@@ -120,7 +127,15 @@ export default function Home() {
         </div>
       )}
 
-      {status && <div className={styles.status}>{status}</div>}
+      {status && (
+        <div
+          className={`${styles.status} ${
+            status.includes("Error") ? styles.error : styles.success
+          }`}
+        >
+          {status}
+        </div>
+      )}
     </main>
   );
 }
