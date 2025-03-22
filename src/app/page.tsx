@@ -211,9 +211,9 @@ export default function Home() {
           <div className={styles.paymentSection}>
             <h3>Make a Payment</h3>
             <DaimoPayButton
-              appId={process.env.DAIMO_API_KEY!}
+              appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
               toAddress={
-                process.env.DESTINATION_WALLET_ADDRESS! as `0x${string}`
+                process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
               }
               toChain={137} // Polygon
               toUnits="0.10" // $0.10 in Polygon USDC
