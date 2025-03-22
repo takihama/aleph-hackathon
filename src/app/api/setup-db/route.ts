@@ -25,8 +25,8 @@ export async function GET() {
         address TEXT NOT NULL UNIQUE,
         mnemonic TEXT,
         worldcoin_id TEXT,
-        worldcoin_username TEXT NOT NULL UNIQUE,
-        worldcoin_address TEXT,
+        worldcoin_username TEXT,
+        worldcoin_address TEXT NOT NULL UNIQUE,
         created_at TIMESTAMPTZ DEFAULT NOW(),
         updated_at TIMESTAMPTZ DEFAULT NOW()
       )
