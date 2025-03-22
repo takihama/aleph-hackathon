@@ -78,16 +78,25 @@ export default function Home() {
     setStatus("Sending notification...");
 
     try {
-      // Get the wallet address from MiniKit.user
-      const walletAddress = MiniKit.user?.walletAddress;
-
-      if (!walletAddress) {
-        setStatus("Error: Could not get your wallet address");
-        setLoading(false);
-        return;
+      // Get the current wallet address from state or try to fetch it
+      let addressToUse = walletAddress;
+      
+      if (!addressToUse) {
+        // Try to get the wallet address from MiniKit if not in state
+        const miniKitAddress = MiniKit.user?.walletAddress;
+        
+        if (miniKitAddress) {
+          // Update state if we got a valid address
+          setWalletAddress(miniKitAddress);
+          addressToUse = miniKitAddress;
+        } else {
+          setStatus("Error: Could not get your wallet address");
+          setLoading(false);
+          return;
+        }
       }
 
-      console.log("Using wallet address:", walletAddress);
+      console.log("Using wallet address:", addressToUse);
 
       // Use the wallet address for the notification
       const response = await fetch("/api/notifications", {
@@ -96,7 +105,7 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          wallet_addresses: [walletAddress],
+          wallet_addresses: [addressToUse],
           title: "Hello from Your App!",
           message: "This is a test notification from your WorldApp mini-app.",
           path: "/notification-received",
