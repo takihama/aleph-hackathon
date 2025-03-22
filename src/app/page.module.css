@@ -71,4 +71,22 @@
   background-color: #e9e9e9;
   padding: 8px;
   border-radius: 4px;
+}
+
+.paymentSection {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.paymentSection h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #333;
 } 

@@ -9,15 +9,18 @@ const APP_ID = process.env.WORLDAPP_APP_ID;
 
 export async function POST(request: Request) {
   // Log environment variables status (not their values)
-  console.log('API Config Check:', {
+  console.log("API Config Check:", {
     hasApiUrl: !!API_URL,
     hasApiKey: !!API_KEY,
     hasAppId: !!APP_ID,
-    apiUrlValue: API_URL
+    apiUrlValue: API_URL,
   });
 
   if (!API_KEY || !APP_ID) {
-    console.error('Missing credentials:', { hasApiKey: !!API_KEY, hasAppId: !!APP_ID });
+    console.error("Missing credentials:", {
+      hasApiKey: !!API_KEY,
+      hasAppId: !!APP_ID,
+    });
     return NextResponse.json(
       { error: "API configuration missing" },
       { status: 500 }
@@ -26,16 +29,12 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    console.log('Request body received:', {
-      hasWalletAddresses: !!body.wallet_addresses,
-      addressesCount: body.wallet_addresses?.length || 0,
-      hasTitle: !!body.title,
-      hasMessage: !!body.message,
-      hasPath: !!body.path
-    });
 
-    if (!body.wallet_addresses || !Array.isArray(body.wallet_addresses) || body.wallet_addresses.length === 0) {
-      console.error('Invalid wallet addresses:', body.wallet_addresses);
+    if (
+      !body.wallet_addresses ||
+      !Array.isArray(body.wallet_addresses) ||
+      body.wallet_addresses.length === 0
+    ) {
       return NextResponse.json(
         { error: "Invalid wallet addresses" },
         { status: 400 }
@@ -52,13 +51,6 @@ export async function POST(request: Request) {
       }`,
     };
 
-    console.log('Sending notification to API:', {
-      url: API_URL,
-      hasAuth: !!API_KEY,
-      payloadStructure: Object.keys(notification),
-      addressesCount: notification.wallet_addresses.length
-    });
-
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -68,24 +60,23 @@ export async function POST(request: Request) {
       body: JSON.stringify(notification),
     });
 
-    console.log('API response status:', response.status);
     const data = await response.json();
-    console.log('API response data:', data);
 
     if (!response.ok) {
-      throw new Error(data.error || data.message || `API error: ${response.status}`);
+      throw new Error(
+        data.error || data.message || `API error: ${response.status}`
+      );
     }
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Notification error:", error);
     return NextResponse.json(
       {
         error:
           error instanceof Error
             ? error.message
             : "Failed to send notification",
-        details: error instanceof Error ? error.stack : undefined
+        details: error instanceof Error ? error.stack : undefined,
       },
       { status: 500 }
     );

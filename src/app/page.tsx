@@ -7,6 +7,7 @@ import {
   RequestPermissionPayload,
 } from "@worldcoin/minikit-js";
 import styles from "./page.module.css";
+import { DaimoPayButton } from "@daimo/pay";
 
 export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
@@ -140,16 +141,16 @@ export default function Home() {
   const authenticateWallet = async () => {
     setLoading(true);
     setStatus("Authenticating wallet...");
-    
+
     try {
       // Generate a random nonce (in production this should come from your server)
       const nonce = Math.random().toString(36).substring(2, 10);
-      
+
       const result = await MiniKit.commandsAsync.walletAuth({
         nonce: nonce,
-        statement: "Connect your wallet to receive notifications"
+        statement: "Connect your wallet to receive notifications",
       });
-      
+
       if (result.finalPayload.status === "success") {
         // After successful auth, MiniKit.user should be available
         const address = result.finalPayload.address;
@@ -161,10 +162,26 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Authentication error:", error);
-      setStatus(`Error authenticating: ${error instanceof Error ? error.message : "Unknown error"}`);
+      setStatus(
+        `Error authenticating: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     } finally {
       setLoading(false);
     }
+  };
+
+  // Payment completion handler
+  const handlePaymentCompleted = (event: any) => {
+    console.log("Payment completed:", event);
+    setStatus("Payment completed successfully!");
+  };
+
+  // Payment started handler
+  const handlePaymentStarted = (event: any) => {
+    console.log("Payment started:", event);
+    setStatus("Payment started...");
   };
 
   return (
@@ -174,8 +191,12 @@ export default function Home() {
           <div className={styles.walletAddressContainer}>
             {walletAddress ? (
               <>
-                <span className={styles.walletAddressLabel}>Wallet Address:</span>
-                <span className={styles.walletAddressValue}>{walletAddress}</span>
+                <span className={styles.walletAddressLabel}>
+                  Wallet Address:
+                </span>
+                <span className={styles.walletAddressValue}>
+                  {walletAddress}
+                </span>
               </>
             ) : (
               <button onClick={authenticateWallet} disabled={loading}>
@@ -193,6 +214,22 @@ export default function Home() {
               {loading ? "Sending..." : "Send Test Notification"}
             </button>
             {/* )} */}
+          </div>
+
+          {/* Add the payment section */}
+          <div className={styles.paymentSection}>
+            <h3>Make a Payment</h3>
+            <DaimoPayButton
+              appId={process.env.DAIMO_API_KEY!}
+              toAddress={
+                process.env.DESTINATION_WALLET_ADDRESS! as `0x${string}`
+              }
+              toChain={137} // Polygon
+              toUnits="0.10" // $0.10 in Polygon USDC
+              toToken="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" // Polygon USDC
+              onPaymentStarted={handlePaymentStarted}
+              onPaymentCompleted={handlePaymentCompleted}
+            />
           </div>
         </>
       ) : (
