@@ -46,6 +46,7 @@ export default function Home() {
     const payload = await MiniKit.commandsAsync.requestPermission(
       requestPermissionPayload
     );
+    setHasPermission(payload.finalPayload.status === "success");
   }, []);
 
   const handleClick = async () => {
