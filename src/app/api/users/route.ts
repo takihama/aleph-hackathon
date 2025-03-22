@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         mnemonic || null,
         worldcoin_username || null,
         worldcoin_address || null,
-        worldcoin_id || null
+        worldcoin_id || null,
       ]
     );
 
