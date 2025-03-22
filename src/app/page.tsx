@@ -73,6 +73,7 @@ export default function Home() {
 
     try {
       // Get the wallet address from MiniKit.user
+      console.error(MiniKit.user);
       const walletAddress = MiniKit.user?.walletAddress;
 
       if (!walletAddress) {
