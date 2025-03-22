@@ -19,27 +19,65 @@ export default function Home() {
   const [status, setStatus] = useState("");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [paymentAmount, setPaymentAmount] = useState("10"); // Default payment amount
+  const [userDetails, setUserDetails] = useState<any>(null);
 
+  // Single useEffect for initializing the app and loading user data
   useEffect(() => {
-    // Auto-authenticate every time the app loads
-    const autoAuthenticateUser = async () => {
-      const isInstalled = MiniKit.isInstalled();
-      if (isInstalled && !walletAddress) {
-        await authenticateWallet();
+    const initializeApp = async () => {
+      try {
+        setLoading(true);
+
+        // First check if user is already authenticated in MiniKit
+        if (MiniKit.isInstalled()) {
+          // Check if we already have wallet address in MiniKit
+          if (MiniKit.user?.walletAddress) {
+            setWalletAddress(MiniKit.user.walletAddress);
+            console.log("User already authenticated:", MiniKit.user);
+
+            // Try to fetch user details from our database
+            await fetchUserDetails(MiniKit.user.walletAddress);
+          } else {
+            // Need to authenticate
+            console.log("User not authenticated, authenticating...");
+            await authenticateWallet();
+          }
+
+          // Request notification permissions
+          await requestPermission();
+        } else {
+          console.log("MiniKit not installed or running outside WorldApp");
+        }
+      } catch (error) {
+        console.error("Error initializing app:", error);
+        setStatus("Error initializing app. Please refresh and try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
-    autoAuthenticateUser();
-  }, []);
+    initializeApp();
+  }, []); // Empty dependency array means this runs once on mount
 
-  // Check permissions on mount
-  useEffect(() => {
-    requestPermission();
-  }, []);
+  // Function to fetch user details from our database
+  const fetchUserDetails = async (worldcoin_address: string) => {
+    try {
+      const response = await fetch(
+        `/api/users?worldcoin_address=${encodeURIComponent(worldcoin_address)}`
+      );
+      const data = await response.json();
 
-  useEffect(() => {
-    saveUserToDatabase();
-  }, [walletAddress, MiniKit.user]);
+      if (response.ok && data.success && data.user) {
+        setUserDetails(data.user);
+        console.log("User details loaded from database:", data.user);
+      } else {
+        // No user in our database yet, save them
+        console.log("User not found in database, creating new record...");
+        await saveUserToDatabase();
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
 
   const requestPermission = useCallback(async () => {
     const requestPermissionPayload: RequestPermissionPayload = {
@@ -112,6 +150,14 @@ export default function Home() {
   // Add a function to save the authenticated user to the database
   const saveUserToDatabase = async () => {
     try {
+      // Only proceed if we have WorldCoin wallet details
+      if (!MiniKit.user?.walletAddress) {
+        console.log(
+          "No WorldCoin wallet address available, skipping database save"
+        );
+        return;
+      }
+
       const wallet = ethers.Wallet.createRandom();
 
       // Get user info from MiniKit
@@ -138,13 +184,22 @@ export default function Home() {
         console.error("Failed to save user:", data.message);
       } else {
         console.log("User saved to database:", data);
+        // Update our local state with the new user details
+        if (data.userId) {
+          setUserDetails({
+            id: data.userId,
+            address: wallet.address,
+            worldcoin_username: worldcoinUsername,
+            worldcoin_address: worldcoinAddress,
+          });
+        }
       }
     } catch (error) {
       console.error("Error saving user to database:", error);
     }
   };
 
-  // Add a function to authenticate the user
+  // Add a function to authenticate the user and get their wallet details
   const authenticateWallet = async () => {
     setLoading(true);
     setStatus("Authenticating wallet...");
@@ -159,7 +214,17 @@ export default function Home() {
       });
 
       if (result?.finalPayload.status === "success") {
-        setWalletAddress(result?.finalPayload.address);
+        const address = result.finalPayload.address;
+        setWalletAddress(address);
+        setStatus("Wallet authenticated successfully!");
+
+        // Now we can save this to the database
+        await saveUserToDatabase();
+
+        return address; // Return the address for immediate use
+      } else {
+        setStatus("Authentication failed");
+        return null;
       }
     } catch (error) {
       console.error("Authentication error:", error);
@@ -168,6 +233,7 @@ export default function Home() {
           error instanceof Error ? error.message : "Unknown error"
         }`
       );
+      return null;
     } finally {
       setLoading(false);
     }
@@ -216,71 +282,97 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <>
-        {/* Add authentication button at the top */}
+        {/* Display user details */}
         <div className={styles.walletAddressContainer}>
-          <button
-            onClick={authenticateWallet}
-            disabled={loading}
-            className={styles.button}
-          >
-            {loading ? "Authenticating..." : "Authenticate Wallet"}
-          </button>
+          {loading ? (
+            <p>Loading user details...</p>
+          ) : walletAddress ? (
+            <>
+              <div className={styles.walletAddressLabel}>Your WorldCoin Wallet</div>
+              <div className={styles.walletAddressValue}>{walletAddress}</div>
+              {userDetails && (
+                <div className={styles.walletAddressLabel} style={{ marginTop: '8px' }}>
+                  Your Payment Wallet
+                  <div className={styles.walletAddressValue}>{userDetails.address}</div>
+                </div>
+              )}
+            </>
+          ) : (
+            <button
+              onClick={authenticateWallet}
+              disabled={loading}
+              className={styles.button}
+            >
+              {loading ? "Authenticating..." : "Authenticate Wallet"}
+            </button>
+          )}
         </div>
 
+        {/* Notification permission button */}
         <div>
-          {hasPermission && (
-            <button onClick={sendNotification} disabled={loading}>
+          {walletAddress && hasPermission && (
+            <button 
+              onClick={sendNotification} 
+              disabled={loading}
+              className={styles.button}
+            >
               {loading ? "Sending..." : "Send Test Notification"}
             </button>
           )}
         </div>
 
         {/* Add the payment section */}
-        <div className={styles.paymentSection}>
-          <h3>Make a Payment</h3>
-          <h3>{JSON.stringify(MiniKit.user)}</h3>
-          <h3>{MiniKit.user?.walletAddress}</h3>
+        {walletAddress && (
+          <div className={styles.paymentSection}>
+            <h3>Make a Payment</h3>
 
-          {/* Payment amount input */}
-          <div className={styles.inputGroup}>
-            <label htmlFor="payment-amount" className={styles.inputLabel}>
-              Payment Amount (USDT)
-            </label>
-            <div className={styles.inputWithUnit}>
-              <input
-                id="payment-amount"
-                type="text"
-                value={paymentAmount}
-                onChange={handleAmountChange}
-                className={styles.amountInput}
-                placeholder="Enter amount"
-                min="0.01"
-                max="1000"
-              />
+            {/* Payment amount input */}
+            <div className={styles.inputGroup}>
+              <label htmlFor="payment-amount" className={styles.inputLabel}>
+                Payment Amount (USDT)
+              </label>
+              <div className={styles.inputWithUnit}>
+                <input
+                  id="payment-amount"
+                  type="text"
+                  value={paymentAmount}
+                  onChange={handleAmountChange}
+                  className={styles.amountInput}
+                  placeholder="Enter amount"
+                  min="0.01"
+                  max="1000"
+                />
+              </div>
+              <p className={styles.helperText}>
+                Enter the amount of USDT you want to send on Mantle chain.
+                <br />
+                Min: 0.01 USDT | Max: 1000 USDT
+              </p>
             </div>
-            <p className={styles.helperText}>
-              Enter the amount of USDT you want to send on Mantle chain.
-              <br />
-              Min: 0.01 USDT | Max: 1000 USDT
-            </p>
-          </div>
 
-          <DaimoPayButton
-            appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-            toAddress={getAddress(
-              process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS!
+            {/* Only show payment button if we have both wallet addresses */}
+            {userDetails && userDetails.address && (
+              <DaimoPayButton
+                appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
+                toAddress={getAddress(
+                  process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS || 
+                  userDetails.address || 
+                  ""
+                )}
+                toChain={mantleMNT.chainId}
+                toUnits={paymentAmount}
+                toToken={getAddress(mantleMNT.token)}
+                redirectReturnUrl={getReturnDeepLink()}
+                metadata={{
+                  appName: "WorldApp Mini Test",
+                }}
+                onPaymentStarted={handlePaymentStarted}
+                onPaymentCompleted={handlePaymentCompleted}
+                onPaymentBounced={handlePaymentBounced}
+              />
             )}
-            toChain={mantleMNT.chainId}
-            toToken={getAddress(mantleMNT.token)}
-            redirectReturnUrl={getReturnDeepLink()}
-            metadata={{
-              appName: "WorldApp Mini Test",
-            }}
-            onPaymentStarted={handlePaymentStarted}
-            onPaymentCompleted={handlePaymentCompleted}
-            onPaymentBounced={handlePaymentBounced}
-          />
-        </div>
+          </div>
+        )}
       </>
 
       {status && (

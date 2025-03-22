@@ -68,15 +68,15 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const address = searchParams.get("address");
+    const worldcoin_address = searchParams.get("worldcoin_address");
 
     let result;
 
-    if (address) {
+    if (worldcoin_address) {
       // Get specific user by address
       result = await query(
         "SELECT id, address, worldcoin_username, worldcoin_address, created_at, updated_at FROM users WHERE address = $1",
-        [address]
+        [worldcoin_address]
       );
 
       if (result.rows.length === 0) {
