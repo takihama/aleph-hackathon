@@ -308,6 +308,8 @@ export default function Home() {
         {/* Add the payment section */}
         <div className={styles.paymentSection}>
           <h3>Make a Payment</h3>
+          <h3>${MiniKit.user?.username}</h3>
+          <h3>${MiniKit.user?.walletAddress}</h3>
 
           {/* Payment amount input */}
           <div className={styles.inputGroup}>
