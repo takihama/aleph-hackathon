@@ -21,7 +21,10 @@ export function DaimoProviders({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <DaimoPayProvider payApiUrl={process.env.NEXT_PUBLIC_DAIMO_API_URL!} debugMode>
+        <DaimoPayProvider
+          payApiUrl={process.env.NEXT_PUBLIC_DAIMO_API_URL!}
+          debugMode
+        >
           {children}
         </DaimoPayProvider>
       </QueryClientProvider>

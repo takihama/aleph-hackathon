@@ -57,23 +57,6 @@ export default function Home() {
     setHasPermission(true);
   }, []);
 
-  const handleClick = async () => {
-    try {
-      setLoading(true);
-      // Your API call here
-      const result = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ message: "En tu cara man." });
-        }, 1000);
-      });
-      setResponse((result as any).message);
-    } catch (error) {
-      setResponse("Error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const sendNotification = async () => {
     setLoading(true);
     setStatus("Sending notification...");
@@ -186,53 +169,40 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {isInWorldApp ? (
-        <>
-          <div className={styles.walletAddressContainer}>
-            {!walletAddress && (
-              <button onClick={authenticateWallet} disabled={loading}>
-                {loading ? "Authenticating..." : "Connect Wallet"}
-              </button>
-            )}
-          </div>
-          <button onClick={handleClick} disabled={loading}>
-            {loading ? "Loading..." : "Click Me!"}
-          </button>
-          {response && <div>{response}</div>}
-          <div>
-            {hasPermission && (
-              <button onClick={sendNotification} disabled={loading}>
-                {loading ? "Sending..." : "Send Test Notification"}
-              </button>
-            )}
-          </div>
-
-          {/* Add the payment section */}
-          <div className={styles.paymentSection}>
-            <h3>Make a Payment</h3>
-            <DaimoPayButton
-              appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-              toAddress={
-                process.env
-                  .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
-              }
-              toChain={5000}
-              toUnits="0.10" // $0.10 in Polygon USDC
-              toToken="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" // Polygon USDC
-              onPaymentStarted={handlePaymentStarted}
-              onPaymentCompleted={handlePaymentCompleted}
-            />
-          </div>
-        </>
-      ) : (
-        <div>
-          <div>Please open this app in WorldApp</div>
-          <pre style={{ fontSize: "12px", marginTop: "20px" }}>
-            Debug Info:
-            {JSON.stringify(debugInfo, null, 2)}
-          </pre>
+      <>
+        <div className={styles.walletAddressContainer}>
+          {!walletAddress && (
+            <button onClick={authenticateWallet} disabled={loading}>
+              {loading ? "Authenticating..." : "Connect Wallet"}
+            </button>
+          )}
         </div>
-      )}
+        {response && <div>{response}</div>}
+        <div>
+          {hasPermission && (
+            <button onClick={sendNotification} disabled={loading}>
+              {loading ? "Sending..." : "Send Test Notification"}
+            </button>
+          )}
+        </div>
+
+        {/* Add the payment section */}
+        <div className={styles.paymentSection}>
+          <h3>Make a Payment</h3>
+          <DaimoPayButton
+            appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
+            toAddress={
+              process.env
+                .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
+            }
+            toChain={137} // Polygon
+            toUnits="0.10" // $0.10 in Polygon USDC
+            toToken="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" // Polygon USDC
+            onPaymentStarted={handlePaymentStarted}
+            onPaymentCompleted={handlePaymentCompleted}
+          />
+        </div>
+      </>
 
       {status && (
         <div
