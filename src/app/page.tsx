@@ -8,10 +8,7 @@ import {
 } from "@worldcoin/minikit-js";
 import styles from "./page.module.css";
 import { DaimoPayButton } from "@daimo/pay";
-
-const TokenDict = {
-  USDt: "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE" as `0x${string}`,
-};
+import { mantleBridgedUSDC } from "@daimo/contract";
 
 export default function Home() {
   const [isInWorldApp, setIsInWorldApp] = useState(false);
@@ -210,10 +207,12 @@ export default function Home() {
         {/* Add the payment section */}
         <div className={styles.paymentSection}>
           <h3>Make a Payment</h3>
-          
+
           {/* Payment amount input */}
           <div className={styles.inputGroup}>
-            <label htmlFor="payment-amount" className={styles.inputLabel}>Payment Amount (USDT)</label>
+            <label htmlFor="payment-amount" className={styles.inputLabel}>
+              Payment Amount (USDT)
+            </label>
             <div className={styles.inputWithUnit}>
               <input
                 id="payment-amount"
@@ -232,20 +231,18 @@ export default function Home() {
               Min: 0.01 USDT | Max: 1000 USDT
             </p>
           </div>
-          
+
           <DaimoPayButton
             appId={process.env.NEXT_PUBLIC_DAIMO_PAY_APP_ID!}
             toAddress={
               process.env
                 .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
             }
-            toChain={5000}
-            toUnits={paymentAmount} // Use the dynamic payment amount here
-            toToken={TokenDict.USDt}
+            toChain={mantleBridgedUSDC.chainId}
+            toUnits={paymentAmount}
+            toToken={mantleBridgedUSDC.token as `0x${string}`}
             metadata={{
               appName: "WorldApp Mini Test",
-              isMobile: "true", // Indicate this is a mobile app as string
-              environment: "worldapp", // Indicate the specific environment
             }}
             onPaymentStarted={handlePaymentStarted}
             onPaymentCompleted={handlePaymentCompleted}

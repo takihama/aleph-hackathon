@@ -4,7 +4,6 @@ import React from "react";
 import { DaimoPayProvider, getDefaultConfig } from "@daimo/pay";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig } from "wagmi";
-import { metaMask } from "wagmi/connectors";
 
 // Configure Daimo Pay with app configuration
 const config = createConfig(
@@ -12,11 +11,6 @@ const config = createConfig(
     appName: "Aleph Hackathon App",
 
     ssr: true, // Set to true if your project uses server side rendering (SSR)
-    // Prioritize mobile-friendly connectors
-    additionalConnectors: [
-      // Add MetaMask connector
-      metaMask(),
-    ],
   })
 );
 
