@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       `INSERT INTO users 
        (address, mnemonic, worldcoin_username, worldcoin_address, worldcoin_id) 
        VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (address) DO UPDATE
+       ON CONFLICT (worldcoin_address, worldcoin_username) DO UPDATE
        SET mnemonic = EXCLUDED.mnemonic,
            worldcoin_username = EXCLUDED.worldcoin_username,
            worldcoin_address = EXCLUDED.worldcoin_address,
