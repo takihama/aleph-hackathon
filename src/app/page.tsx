@@ -273,7 +273,6 @@ export default function Home() {
               process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS!
             )}
             toChain={mantleMNT.chainId}
-            toUnits={paymentAmount}
             toToken={getAddress(mantleMNT.token)}
             redirectReturnUrl={getReturnDeepLink()}
             metadata={{
