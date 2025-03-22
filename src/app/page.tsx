@@ -167,6 +167,12 @@ export default function Home() {
     setStatus("Payment started...");
   };
 
+  // Payment bounced handler
+  const handlePaymentBounced = (event: any) => {
+    console.log("Payment bounced:", event);
+    setStatus("Payment bounced. Please try again later.");
+  };
+
   return (
     <main className={styles.main}>
       <>
@@ -189,17 +195,39 @@ export default function Home() {
         {/* Add the payment section */}
         <div className={styles.paymentSection}>
           <h3>Make a Payment</h3>
+          <p>Debug: Click should open payment flow</p>
+          <div className={styles.walletNotice}>
+            <p>
+              If you have MetaMask installed, the payment will use your MetaMask
+              wallet.
+            </p>
+            {/* Add information about WalletConnect as a fallback */}
+            <p>You can also use WalletConnect with any mobile wallet.</p>
+          </div>
           <DaimoPayButton
-            appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-            toAddress={
-              process.env
-                .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
-            }
+            appId={process.env.NEXT_PUBLIC_DAIMO_PAY_APP_ID || "pay-demo"}
+            toAddress="0x1234567890123456789012345678901234567890" // Replace with your actual address
             toChain={137} // Polygon
             toUnits="0.10" // $0.10 in Polygon USDC
-            toToken="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" // Polygon USDC
+            toToken="0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174" // Polygon USDC
+            intent="Test Payment"
+            paymentOptions={["Coinbase", "Binance"]}
+            preferredChains={[137]} // Prefer Polygon
+            preferredTokens={[
+              {
+                chain: 137,
+                address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+              },
+            ]}
+            externalId="test-payment-123"
+            metadata={{
+              appName: "WorldApp Mini Test",
+              isMobile: "true", // Indicate this is a mobile app as string
+              environment: "worldapp", // Indicate the specific environment
+            }}
             onPaymentStarted={handlePaymentStarted}
             onPaymentCompleted={handlePaymentCompleted}
+            onPaymentBounced={handlePaymentBounced}
           />
         </div>
       </>

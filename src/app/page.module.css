@@ -89,4 +89,21 @@
   margin-top: 0;
   margin-bottom: 16px;
   color: #333;
+}
+
+.walletNotice {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.walletNotice p {
+  margin: 0 0 6px 0;
+}
+
+.walletNotice p:last-child {
+  margin-bottom: 0;
 } 
