@@ -282,18 +282,25 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <>
-        {/* Display user details */}
+        {/* Add authentication button at the top */}
         <div className={styles.walletAddressContainer}>
           {loading ? (
             <p>Loading user details...</p>
           ) : walletAddress ? (
             <>
-              <div className={styles.walletAddressLabel}>Your WorldCoin Wallet</div>
+              <div className={styles.walletAddressLabel}>
+                Your WorldCoin Wallet
+              </div>
               <div className={styles.walletAddressValue}>{walletAddress}</div>
               {userDetails && (
-                <div className={styles.walletAddressLabel} style={{ marginTop: '8px' }}>
+                <div
+                  className={styles.walletAddressLabel}
+                  style={{ marginTop: "8px" }}
+                >
                   Your Payment Wallet
-                  <div className={styles.walletAddressValue}>{userDetails.address}</div>
+                  <div className={styles.walletAddressValue}>
+                    {userDetails.address}
+                  </div>
                 </div>
               )}
             </>
@@ -311,8 +318,8 @@ export default function Home() {
         {/* Notification permission button */}
         <div>
           {walletAddress && hasPermission && (
-            <button 
-              onClick={sendNotification} 
+            <button
+              onClick={sendNotification}
               disabled={loading}
               className={styles.button}
             >
@@ -354,11 +361,7 @@ export default function Home() {
             {userDetails && userDetails.address && (
               <DaimoPayButton
                 appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-                toAddress={getAddress(
-                  process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS || 
-                  userDetails.address || 
-                  ""
-                )}
+                toAddress={getAddress(MiniKit.user!.walletAddress)}
                 toChain={mantleMNT.chainId}
                 toUnits={paymentAmount}
                 toToken={getAddress(mantleMNT.token)}
