@@ -15,6 +15,7 @@ export default function Home() {
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   useEffect(() => {
     // Add debugging information
@@ -29,6 +30,11 @@ export default function Home() {
         userAgent: window.navigator.userAgent,
         windowObject: Object.keys(window).includes("MiniKit"),
       });
+
+      // Get wallet address if available
+      if (isInstalled && MiniKit.user?.walletAddress) {
+        setWalletAddress(MiniKit.user.walletAddress);
+      }
     };
 
     checkEnvironment();
@@ -73,8 +79,7 @@ export default function Home() {
 
     try {
       // Get the wallet address from MiniKit.user
-      console.error(MiniKit.user);
-      const walletAddress = "0x8082a0bad443945b845b73ad97afbd52250fc92a";
+      const walletAddress = MiniKit.user?.walletAddress;
 
       if (!walletAddress) {
         setStatus("Error: Could not get your wallet address");
@@ -126,6 +131,12 @@ export default function Home() {
     <main className={styles.main}>
       {isInWorldApp ? (
         <>
+          {walletAddress && (
+            <div className={styles.walletAddressContainer}>
+              <span className={styles.walletAddressLabel}>Wallet Address:</span>
+              <span className={styles.walletAddressValue}>{walletAddress}</span>
+            </div>
+          )}
           <button onClick={handleClick} disabled={loading}>
             {loading ? "Loading..." : "Click Me!"}
           </button>
