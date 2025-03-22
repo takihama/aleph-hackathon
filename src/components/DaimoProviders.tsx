@@ -9,7 +9,6 @@ import { WagmiProvider, createConfig } from "wagmi";
 const config = createConfig(
   getDefaultConfig({
     appName: "Aleph Hackathon App",
-
     ssr: true, // Set to true if your project uses server side rendering (SSR)
   })
 );
@@ -22,7 +21,9 @@ export function DaimoProviders({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <DaimoPayProvider>{children}</DaimoPayProvider>
+        <DaimoPayProvider payApiUrl={process.env.NEXT_PUBLIC_DAIMO_API_URL!}>
+          {children}
+        </DaimoPayProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

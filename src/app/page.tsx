@@ -82,8 +82,6 @@ export default function Home() {
         }
       }
 
-      console.log("Using wallet address:", addressToUse);
-
       // Use the wallet address for the notification
       const response = await fetch("/api/notifications", {
         method: "POST",
@@ -99,11 +97,9 @@ export default function Home() {
       });
 
       const data = await response.json();
-      console.log("Notification API response:", data);
 
       if (response.ok && data.success) {
         setStatus("Notification sent successfully!");
-        console.log("Delivery results:", data.result);
       } else {
         setStatus(
           `Failed to send notification: ${data.error || "Unknown error"}`
@@ -111,7 +107,6 @@ export default function Home() {
         console.error("Error details:", data.details || "No details provided");
       }
     } catch (error) {
-      console.error("Error sending notification:", error);
       setStatus(
         `Error sending notification: ${
           error instanceof Error ? error.message : "Unknown error"
@@ -141,7 +136,6 @@ export default function Home() {
         const address = result.finalPayload.address;
         setWalletAddress(address);
         setStatus("Wallet authenticated successfully!");
-        console.log("User data:", MiniKit.user);
       } else {
         setStatus("Authentication failed");
       }
@@ -159,19 +153,16 @@ export default function Home() {
 
   // Payment completion handler
   const handlePaymentCompleted = (event: any) => {
-    console.log("Payment completed:", event);
     setStatus("Payment completed successfully!");
   };
 
   // Payment started handler
   const handlePaymentStarted = (event: any) => {
-    console.log("Payment started:", event);
     setStatus("Payment started...");
   };
 
   // Payment bounced handler
   const handlePaymentBounced = (event: any) => {
-    console.log("Payment bounced:", event);
     setStatus("Payment bounced. Please try again later.");
   };
 
@@ -233,7 +224,7 @@ export default function Home() {
           </div>
 
           <DaimoPayButton
-            appId={process.env.NEXT_PUBLIC_DAIMO_PAY_APP_ID!}
+            appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
             toAddress={
               process.env
                 .NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS! as `0x${string}`
