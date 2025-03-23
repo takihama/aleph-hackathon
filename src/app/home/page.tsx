@@ -127,20 +127,41 @@ export default function HomePage() {
     setLoading(true);
 
     try {
+      console.log("Starting wallet authentication");
       const nonce = Math.random().toString(36).substring(2, 10);
 
       const result = await MiniKit.commandsAsync.walletAuth({
         nonce: nonce,
         statement: "Connect your wallet to receive notifications",
       });
+      
+      console.log("Wallet auth result:", result);
 
       if (result?.finalPayload.status === "success") {
         const address = result.finalPayload.address;
+        console.log("Authentication successful, got address:", address);
+        
+        // Store in localStorage for persistence
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("userWalletAddress", address);
+          } catch (e) {
+            console.error("Error saving to localStorage:", e);
+          }
+        }
+        
         setWalletAddress(address);
         return address;
+      } else {
+        console.error("Authentication failed or invalid response:", result);
       }
     } catch (error) {
       console.error("Error authenticating wallet:", error);
+      // Try again after a delay
+      setTimeout(() => {
+        console.log("Retrying wallet authentication...");
+        authenticateWallet();
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -175,13 +196,17 @@ export default function HomePage() {
   // Fetch user details from the database
   const fetchUserDetails = async () => {
     try {
+      console.log("Fetching user details for wallet address:", walletAddress);
       const response = await fetch(
         `/api/users?worldcoin_address=${walletAddress!}`
       );
       const data = await response.json();
+      console.log("User details API response:", data);
 
       if (response.ok && data.success && data.user) {
         setUserDetails(data.user);
+      } else {
+        console.error("Failed to get valid user details:", data);
       }
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -191,9 +216,17 @@ export default function HomePage() {
   // Fetch balance from API
   const fetchBalance = async () => {
     try {
-      console.log("Fetching balance for address:", userDetails.address);
+      // Only use legitimate addresses, never fallbacks
+      const addressToUse = userDetails?.address || walletAddress;
+      
+      if (!addressToUse) {
+        console.error("No valid address available for balance fetch");
+        return;
+      }
+      
+      console.log("Fetching balance for address:", addressToUse);
       const response = await fetch(
-        `/api/balance?address=${userDetails.address}`
+        `/api/balance?address=${addressToUse}`
       );
       const data = await response.json();
       console.log("Balance API response:", data);
@@ -209,11 +242,25 @@ export default function HomePage() {
         
         console.log("Formatted balance:", formattedBalance);
         setBalance(formattedBalance);
+      } else {
+        console.error("Failed to get valid balance data:", data);
       }
     } catch (error) {
       console.error("Error fetching balance:", error);
     }
   };
+
+  // Add a periodic refresh for connectivity issues
+  useEffect(() => {
+    // Try to fetch balance again after authentication is likely complete
+    const timeoutId = setTimeout(() => {
+      if (userDetails?.address || walletAddress) {
+        fetchBalance();
+      }
+    }, 3000);
+    
+    return () => clearTimeout(timeoutId);
+  }, [userDetails, walletAddress]);
 
   // Generate a dynamic deep link that uses the current path
   const getReturnDeepLink = () => {
