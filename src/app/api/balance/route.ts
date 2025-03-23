@@ -1,47 +1,53 @@
 import { NextResponse } from "next/server";
-import { query } from "@/lib/server/db";
+import { ethers } from "ethers";
 
-export async function GET() {
+// USDT token contract ABI (only the balanceOf function)
+const tokenAbi = [
+  "function balanceOf(address owner) view returns (uint256)"
+];
+
+// Mantle network RPC URL
+const MANTLE_RPC_URL = "https://rpc.mantle.xyz";
+// USDT token address on Mantle
+const USDT_ADDRESS = "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE";
+
+export async function GET(request: Request) {
   try {
-    // Create a payments table if it doesn't exist
-    // await query(`
-    //   CREATE TABLE IF NOT EXISTS payments (
-    //     id SERIAL PRIMARY KEY,
-    //     wallet_address TEXT NOT NULL,
-    //     amount DECIMAL(18, 8) NOT NULL,
-    //     token TEXT NOT NULL,
-    //     chain_id INTEGER NOT NULL,
-    //     tx_hash TEXT,
-    //     status TEXT NOT NULL,
-    //     created_at TIMESTAMPTZ DEFAULT NOW(),
-    //     updated_at TIMESTAMPTZ DEFAULT NOW()
-    //   )
-    // `);
+    const { searchParams } = new URL(request.url);
+    const address = searchParams.get("address");
     
-    // Create a users table if it doesn't exist
-    await query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        address TEXT NOT NULL UNIQUE,
-        mnemonic TEXT,
-        worldcoin_id TEXT,
-        worldcoin_username TEXT,
-        worldcoin_address TEXT NOT NULL UNIQUE,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
-      )
-    `);
+    if (!address) {
+      return NextResponse.json(
+        { success: false, message: "Address parameter is required" },
+        { status: 400 }
+      );
+    }
+
+    // Connect to Mantle network
+    const provider = new ethers.JsonRpcProvider(MANTLE_RPC_URL);
+    
+    // Create contract instance
+    const tokenContract = new ethers.Contract(USDT_ADDRESS, tokenAbi, provider);
+    
+    // Get balance
+    const balance = await tokenContract.balanceOf(address);
+    
+    // USDT typically has 6 decimals
+    const formattedBalance = ethers.formatUnits(balance, 6);
     
     return NextResponse.json({
       success: true,
-      message: "Database tables created successfully",
+      address: address,
+      balance: formattedBalance,
+      token: "USDT",
+      network: "Mantle"
     });
   } catch (error) {
-    console.error("Error setting up database:", error);
+    console.error("Error fetching balance:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to setup database",
+        message: "Failed to fetch balance",
         error: (error as Error).message,
       },
       { status: 500 }

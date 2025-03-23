@@ -22,6 +22,8 @@ export default function HomePage() {
   const [userDetails, setUserDetails] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
+  const [balance, setBalance] = useState("100");
+  const [futureBalance, setFutureBalance] = useState("1.352,7");
   
   // Initialize app and check if MiniKit is installed
   useEffect(() => {
@@ -57,6 +59,36 @@ export default function HomePage() {
       fetchUserDetails();
     }
   }, [walletAddress]);
+  
+  // Fetch balance when user details are available
+  useEffect(() => {
+    if (userDetails?.address) {
+      fetchBalance();
+    }
+  }, [userDetails]);
+
+  // Calculate future balance
+  useEffect(() => {
+    try {
+      // Calculate future value with 5.5% annual growth for 30 years
+      const currentBalance = parseFloat(balance.replace(',', '.'));
+      const years = 30;
+      const annualRate = 0.055;
+      
+      // Compound interest formula: FV = PV * (1 + r)^n
+      const futureValue = currentBalance * Math.pow(1 + annualRate, years);
+      
+      // Format with thousands separator and comma as decimal separator (Spanish format)
+      const formatted = new Intl.NumberFormat('es-ES', {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      }).format(futureValue);
+      
+      setFutureBalance(formatted);
+    } catch (error) {
+      console.error("Error calculating future balance:", error);
+    }
+  }, [balance]);
 
   // Request permission for notifications
   const requestPermission = useCallback(async () => {
@@ -114,6 +146,22 @@ export default function HomePage() {
     }
   };
 
+  // Fetch balance from API
+  const fetchBalance = async () => {
+    try {
+      const response = await fetch(
+        `/api/balance?address=${userDetails.address}`
+      );
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setBalance(data.balance);
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  };
+
   // Generate a dynamic deep link that uses the current path
   const getReturnDeepLink = () => {
     const currentPath =
@@ -162,7 +210,7 @@ export default function HomePage() {
               <div className={styles.cardLeft}>
                 <div className={styles.cardLabel}>Mi senda hoy</div>
                 <div className={styles.growthInfo}>Crece al 5,5% anual 😀</div>
-                <div className={styles.amount} style={{ color: '#4285F4' }}>$100</div>
+                <div className={styles.amount} style={{ color: '#4285F4' }}>${balance}</div>
               </div>
               <div className={styles.avatarContainer}>
                 <Image src="/images/young.png" alt="Young avatar" width={135} height={135} />
@@ -175,7 +223,7 @@ export default function HomePage() {
               <div className={styles.cardLeft}>
                 <div className={styles.cardLabel}>Mi senda mañana</div>
                 <div className={styles.growthInfo}>En 30 años tendrías</div>
-                <div className={styles.amount} style={{ color: '#34A853' }}>$1.352,7</div>
+                <div className={styles.amount} style={{ color: '#34A853' }}>${futureBalance}</div>
               </div>
               <div className={styles.avatarContainer}>
                 <Image src="/images/old.png" alt="Old avatar" width={135} height={135} />
