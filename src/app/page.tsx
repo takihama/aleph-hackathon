@@ -70,7 +70,7 @@ export default function Home() {
         `/api/users?worldcoin_address=${walletAddress!}`
       );
       const data = await response.json();
-      setStatus(`User details fetched: ${JSON.stringify(data.user.address)}`);
+
       if (response.ok && data.success && data.user) {
         setUserDetails(data.user);
         console.log("User details loaded from database:", data.user);
@@ -81,7 +81,6 @@ export default function Home() {
       }
     } catch (error) {
       setStatus(`Error fetching user details: ${error}`);
-      console.error("Error fetching user details:", error);
     }
   };
 
