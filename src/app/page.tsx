@@ -14,7 +14,7 @@ import { createWorldAppDeepLink } from "@/lib/deeplink";
 import { ethers } from "ethers";
 
 export default function Home() {
-  const [user, setUser] = useState(Minikit.user ?? null);
+  const [user, setUser] = useState(MiniKit.user ?? null);
   const [loading, setLoading] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
