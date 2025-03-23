@@ -58,13 +58,9 @@ export default function Home() {
         } else {
           console.log("MiniKit not installed or running outside WorldApp");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error initializing app:", error);
-        setStatus(
-          `Error: ${JSON.stringify(
-            error
-          )}`
-        );
+        setStatus(`Error: ${error.mesasge} ${JSON.stringify(error.mesage)}`);
       } finally {
         setLoading(false);
       }
