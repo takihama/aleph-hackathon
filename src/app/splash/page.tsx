@@ -8,7 +8,7 @@ export default function SplashScreen() {
   const router = useRouter();
 
   const handleGetStarted = () => {
-    router.push("/onboarding/1");
+    router.push("/home");
   };
 
   return (
