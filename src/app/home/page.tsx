@@ -74,9 +74,9 @@ export default function HomePage() {
       // Calculate future value with annual growth for 30 years
       let currentBalance = 0;
       if (balance !== "-") {
-        currentBalance = parseFloat(balance.replace(/,/g, ''));
+        currentBalance = parseFloat(balance.replace(/,/g, ""));
       }
-      
+
       const years = 30;
       const annualRate = 0.055 + Math.random() * (0.12 - 0.055);
 
@@ -178,7 +178,6 @@ export default function HomePage() {
         },
         body: JSON.stringify({
           worldcoin_address: walletAddress,
-          amount: balance,
         }),
       });
 
@@ -234,12 +233,12 @@ export default function HomePage() {
       if (response.ok && data.success) {
         const rawBalance = parseFloat(data.balance);
         console.log("Raw balance value:", rawBalance);
-        
-        const formattedBalance = new Intl.NumberFormat('en-US', {
+
+        const formattedBalance = new Intl.NumberFormat("en-US", {
           minimumFractionDigits: rawBalance < 0.1 ? 2 : 0,
-          maximumFractionDigits: 2
+          maximumFractionDigits: 2,
         }).format(rawBalance);
-        
+
         console.log("Formatted balance:", formattedBalance);
         setBalance(formattedBalance);
       } else {
