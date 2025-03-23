@@ -25,6 +25,7 @@ export default function HomePage() {
   const [balance, setBalance] = useState("-");
   const [futureBalance, setFutureBalance] = useState("-");
   const [annualRateDisplay, setAnnualRateDisplay] = useState("5.5");
+  const [apiDebugInfo, setApiDebugInfo] = useState("");
 
   // Initialize app and check if MiniKit is installed
   useEffect(() => {
@@ -229,6 +230,9 @@ export default function HomePage() {
       );
       const data = await response.json();
       console.log("Balance API response:", data);
+      
+      // Store debug info
+      setApiDebugInfo(JSON.stringify(data, null, 2));
 
       if (response.ok && data.success) {
         const rawBalance = parseFloat(data.balance);
@@ -326,6 +330,18 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* Debug address display */}
+          <div style={{ fontSize: '12px', color: '#777', margin: '5px 0', wordBreak: 'break-all' }}>
+            Address: {walletAddress || 'Not connected'}
+          </div>
+
+          {/* Debug API info display */}
+          {apiDebugInfo && (
+            <div style={{ fontSize: '12px', color: '#777', margin: '5px 0', wordBreak: 'break-all' }}>
+              API Response: {apiDebugInfo}
+            </div>
+          )}
 
           <div className={styles.card}>
             <div className={styles.cardContent}>
