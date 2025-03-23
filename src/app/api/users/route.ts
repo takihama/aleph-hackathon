@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    if (!body.worldcoin_username || !body.worldcoin_address) {
+    if (!body.worldcoin_address) {
       return NextResponse.json(
         {
           success: false,
