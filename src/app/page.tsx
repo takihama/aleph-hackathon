@@ -60,7 +60,7 @@ export default function Home() {
         }
       } catch (error: any) {
         console.error("Error initializing app:", error);
-        setStatus(`Error: ${error.mesasge} ${JSON.stringify(error.mesage)}`);
+        setStatus(`Error: ${error} ${JSON.stringify(error.message)}`);
       } finally {
         setLoading(false);
       }
