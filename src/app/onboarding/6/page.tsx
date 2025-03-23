@@ -27,18 +27,18 @@ export default function OnboardingPage6() {
         </div>
         
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>¿Con qué frecuencia sumarás dinero al fondo?</h1>
-          <p className={styles.subtitle}>Te enviaré un recordatorio para ayudarte a mantener el hábito</p>
+          <h1 className={styles.title}>How do you want our fund to grow?</h1>
+          <p className={styles.subtitle}>You can take it slow, seek balance, or be more ambitious</p>
         </div>
         
         <div className={styles.optionsSection}>
-          <h2 className={styles.optionsTitle}>Elige una opción</h2>
+          <h2 className={styles.optionsTitle}>Choose an option</h2>
           
           <div className={styles.optionsList}>
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>✅</span>
-                <span className={styles.optionText}>Sí, cada mes</span>
+                <span className={styles.optionText}>I prefer to take it slow, even if it grows slowly</span>
               </div>
               <input 
                 type="radio" 
@@ -54,7 +54,7 @@ export default function OnboardingPage6() {
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>🔄</span>
-                <span className={styles.optionText}>Quiero hacerlo de forma manual</span>
+                <span className={styles.optionText}>Let's find a balance between safety and growth</span>
               </div>
               <input 
                 type="radio" 
@@ -70,7 +70,7 @@ export default function OnboardingPage6() {
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>⌛</span>
-                <span className={styles.optionText}>No lo sé aún, recuerdamelo después</span>
+                <span className={styles.optionText}>I prefer to take more risks if it helps grow more</span>
               </div>
               <input 
                 type="radio" 
@@ -87,11 +87,11 @@ export default function OnboardingPage6() {
         
         <div className={styles.infoBox}>
           <span className={styles.infoIcon}>!</span>
-          <p className={styles.infoText}>Te enviaremos un recordatorio más adelante, según la opción que elijas</p>
+          <p className={styles.infoText}>We will choose the best option for your risk tolerance level.</p>
         </div>
         
         <button className={styles.continueButton} onClick={handleContinue}>
-          Continuar
+          Continue
         </button>
       </div>
     </div>

@@ -25,9 +25,9 @@ export default function OnboardingPage1() {
         </div>
         
         <div className={styles.textContent}>
-          <h2 className={`${styles.title} ${outfit.className}`}>Cuida a quien vas a ser mañana</h2>
-          <p className={`${styles.description} ${manrope.className}`}>Tu yo del futuro va a necesitarte.</p>
-          <p className={`${styles.description} ${manrope.className}`}>Construye tu retiro, paso a paso, desde hoy</p>
+          <h2 className={`${styles.title} ${outfit.className}`}>Take care of who you will be tomorrow.</h2>
+          <p className={`${styles.description} ${manrope.className}`}>Your future self is going to need you.</p>
+          <p className={`${styles.description} ${manrope.className}`}>Build your retirement, step by step, starting today.</p>
         </div>
         
         <div className={styles.pagination}>

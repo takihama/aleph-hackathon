@@ -43,17 +43,17 @@ export default function SuccessPage() {
         </div>
         
         <h1 className={styles.title}>
-          ¡Agregaste ${formattedAmount()} USD
-          <br />a tu fondo de retiro!
+          You added ${formattedAmount()} USD
+          <br />to your retirement fund!
         </h1>
         
         <div className={styles.message}>
-          <p>Gracias por pensar en mí.</p>
-          <p className={styles.signature}>"Tu yo del futuro"</p>
+          <p>Thank you for thinking of me</p>
+          <p className={styles.signature}>"Your future self"</p>
         </div>
         
         <button className={styles.button} onClick={handleReturn}>
-          Volver al inicio
+          Back to home
         </button>
       </div>
     </div>

@@ -25,9 +25,9 @@ export default function OnboardingPage3() {
         </div>
         
         <div className={styles.textContent}>
-          <h2 className={`${styles.title} ${outfit.className}`}>Así de simple empieza tu Senda</h2>
-          <p className={`${styles.description} ${manrope.className}`}>Se guarda en una cuenta digital a tu nombre dentro de una red segura y sin intermediarios.</p>
-          <p className={`${styles.description} ${manrope.className}`}>Crece con el tiempo, de forma automática.</p>
+          <h2 className={`${styles.title} ${outfit.className}`}>This is how simply your Senda begins</h2>
+          <p className={`${styles.description} ${manrope.className}`}>It is stored in a digital account in your name within a secure network and without intermediaries.</p>
+          <p className={`${styles.description} ${manrope.className}`}>It grows over time, automatically.</p>
         </div>
         
         <div className={styles.pagination}>

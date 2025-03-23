@@ -41,22 +41,28 @@ export default function OnboardingPage7() {
 
         <div className={styles.titleSection}>
           <h1 className={styles.title}>
-            ¿Cómo quieres que crezca nuestro fondo?
+            Hello
           </h1>
           <p className={styles.subtitle}>
-            Puedes ir con calma, buscar equilibrio o ser más ambicioso
+            It's me... but in a few years
+          </p>
+          <p className={styles.additionalText}>
+            I'm fine, calm
+          </p>
+          <p className={styles.additionalText}>
+            I want to thank you for what you decided to start today
           </p>
         </div>
 
         <div className={styles.optionsSection}>
-          <h2 className={styles.optionsTitle}>Elige una opción</h2>
+          <h2 className={styles.optionsTitle}>Choose an option</h2>
 
           <div className={styles.optionsList}>
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>🌱</span>
                 <span className={styles.optionText}>
-                  Prefiero ir con calma, aunque crezca lento
+                  I prefer to take it slow, even if it grows slowly
                 </span>
               </div>
               <input
@@ -78,7 +84,7 @@ export default function OnboardingPage7() {
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>⚖️</span>
                 <span className={styles.optionText}>
-                  Busquemos un equilibrio entre seguridad y crecimiento
+                  Let's find a balance between safety and growth
                 </span>
               </div>
               <input
@@ -100,7 +106,7 @@ export default function OnboardingPage7() {
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>🔥</span>
                 <span className={styles.optionText}>
-                  Prefiero tomar más riesgos si eso ayuda a crecer más
+                  I prefer to take more risks if it helps grow more
                 </span>
               </div>
               <input
@@ -123,12 +129,12 @@ export default function OnboardingPage7() {
         <div className={styles.infoBox}>
           <span className={styles.infoIcon}>!</span>
           <p className={styles.infoText}>
-            Elegiremos la mejor opción para tu nivel de tolerancia al riesgo
+            We will choose the best option for your risk tolerance level.
           </p>
         </div>
 
         <button className={styles.continueButton} onClick={handleContinue}>
-          Continuar
+          Continue
         </button>
       </div>
     </div>

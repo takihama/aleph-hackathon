@@ -25,9 +25,9 @@ export default function OnboardingPage2() {
         </div>
         
         <div className={styles.textContent}>
-          <h2 className={`${styles.title} ${outfit.className}`}>Tu fondo de retiro, sin complicaciones</h2>
-          <p className={`${styles.description} ${manrope.className}`}>No necesitas saber de inversiones ni finanzas</p>
-          <p className={`${styles.description} ${manrope.className}`}>Tu eliges cuánto, cuándo y cómo</p>
+          <h2 className={`${styles.title} ${outfit.className}`}>Your retirement fund, without complications.</h2>
+          <p className={`${styles.description} ${manrope.className}`}>You don't need to know about investments or finance.</p>
+          <p className={`${styles.description} ${manrope.className}`}>You choose how much, when, and how.</p>
         </div>
         
         <div className={styles.pagination}>

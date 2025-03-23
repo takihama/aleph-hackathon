@@ -27,18 +27,18 @@ export default function OnboardingPage5() {
         </div>
         
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>¿Quieres que este aporte se repita?</h1>
-          <p className={styles.subtitle}>No importa si es mucho o poco. ¡Lo importante es empezar!</p>
+          <h1 className={styles.title}>How often will you add money?</h1>
+          <p className={styles.subtitle}>I'll send you a reminder to help you keep the habit</p>
         </div>
         
         <div className={styles.optionsSection}>
-          <h2 className={styles.optionsTitle}>Elige una opción</h2>
+          <h2 className={styles.optionsTitle}>Choose an option</h2>
           
           <div className={styles.optionsList}>
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>📅</span>
-                <span className={styles.optionText}>Todos los meses</span>
+                <span className={styles.optionText}>Every month</span>
               </div>
               <input 
                 type="radio" 
@@ -54,7 +54,7 @@ export default function OnboardingPage5() {
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>✋</span>
-                <span className={styles.optionText}>De vez en cuando, cuando pueda</span>
+                <span className={styles.optionText}>Occasionally, when I can</span>
               </div>
               <input 
                 type="radio" 
@@ -70,7 +70,7 @@ export default function OnboardingPage5() {
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>🕒</span>
-                <span className={styles.optionText}>Todavía no lo sé</span>
+                <span className={styles.optionText}>I don't know yet</span>
               </div>
               <input 
                 type="radio" 
@@ -87,11 +87,11 @@ export default function OnboardingPage5() {
         
         <div className={styles.infoBox}>
           <span className={styles.infoIcon}>!</span>
-          <p className={styles.infoText}>Elegiremos la mejor opción para tu nivel de tolerancia al riesgo</p>
+          <p className={styles.infoText}>We will choose the best option for your level of risk tolerance.</p>
         </div>
         
         <button className={styles.continueButton} onClick={handleContinue}>
-          Continuar
+          Continue
         </button>
       </div>
     </div>

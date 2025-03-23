@@ -27,18 +27,18 @@ export default function OnboardingPage4() {
         </div>
         
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>¿Cómo imaginás tu vida cuando te retires?</h1>
-          <p className={styles.subtitle}>Regalate un momento para imaginar cómo querés vivir ese futuro</p>
+          <h1 className={styles.title}>How do you picture your life in retirement?</h1>
+          <p className={styles.subtitle}>Take a moment to envision how you want to live that future</p>
         </div>
         
         <div className={styles.optionsSection}>
-          <h2 className={styles.optionsTitle}>Elige una opción</h2>
+          <h2 className={styles.optionsTitle}>Choose an option</h2>
           
           <div className={styles.optionsList}>
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>🛏️</span>
-                <span className={styles.optionText}>Viviendo tranquilo, sin preocupaciones</span>
+                <span className={styles.optionText}>Living peacefully, without worries</span>
               </div>
               <input 
                 type="radio" 
@@ -54,7 +54,7 @@ export default function OnboardingPage4() {
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>👨‍👩‍👧‍👦</span>
-                <span className={styles.optionText}>Disfrutando el tiempo con quienes quiero</span>
+                <span className={styles.optionText}>Enjoying time with those I love</span>
               </div>
               <input 
                 type="radio" 
@@ -70,7 +70,7 @@ export default function OnboardingPage4() {
             <label className={styles.optionCard}>
               <div className={styles.optionContent}>
                 <span className={styles.optionEmoji}>🌍</span>
-                <span className={styles.optionText}>Viajando o cumpliendo sueños pendientes</span>
+                <span className={styles.optionText}>Traveling or fulfilling pending dreams</span>
               </div>
               <input 
                 type="radio" 
@@ -87,11 +87,11 @@ export default function OnboardingPage4() {
         
         <div className={styles.infoBox}>
           <span className={styles.infoIcon}>!</span>
-          <p className={styles.infoText}>Elegiremos la mejor opción para tu nivel de tolerancia al riesgo</p>
+          <p className={styles.infoText}>We will choose the best option for your level of risk tolerance.</p>
         </div>
         
         <button className={styles.continueButton} onClick={handleContinue}>
-          Continuar
+          Continue
         </button>
       </div>
     </div>
