@@ -14,6 +14,7 @@ import { createWorldAppDeepLink } from "@/lib/deeplink";
 import { ethers } from "ethers";
 
 export default function Home() {
+  const [user, setUser] = useState(Minikit.user ?? null);
   const [loading, setLoading] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
@@ -29,6 +30,18 @@ export default function Home() {
 
         // First check if user is already authenticated in MiniKit
         if (MiniKit.isInstalled()) {
+          useEffect(() => {
+            const interval = setInterval(() => {
+              if (MiniKit.user && MiniKit.user !== user) {
+                setUser(MiniKit.user);
+              }
+            }, 1000); // Poll every second
+
+            return () => clearInterval(interval); // Cleanup on unmount
+          }, [user]);
+
+          await authenticateWallet();
+
           // Check if we already have wallet address in MiniKit
           if (MiniKit.user?.walletAddress) {
             setWalletAddress(MiniKit.user.walletAddress);
@@ -39,7 +52,6 @@ export default function Home() {
           } else {
             // Need to authenticate
             console.log("User not authenticated, authenticating...");
-            await authenticateWallet();
           }
 
           // Request notification permissions
@@ -333,47 +345,20 @@ export default function Home() {
           <div className={styles.paymentSection}>
             <h3>Make a Payment</h3>
 
-            {/* Payment amount input */}
-            <div className={styles.inputGroup}>
-              <label htmlFor="payment-amount" className={styles.inputLabel}>
-                Payment Amount (USDT)
-              </label>
-              <div className={styles.inputWithUnit}>
-                <input
-                  id="payment-amount"
-                  type="text"
-                  value={paymentAmount}
-                  onChange={handleAmountChange}
-                  className={styles.amountInput}
-                  placeholder="Enter amount"
-                  min="0.01"
-                  max="1000"
-                />
-              </div>
-              <p className={styles.helperText}>
-                Enter the amount of USDT you want to send on Mantle chain.
-                <br />
-                Min: 0.01 USDT | Max: 1000 USDT
-              </p>
-            </div>
-
-            {/* Only show payment button if we have both wallet addresses */}
-            {userDetails && userDetails.address && (
-              <DaimoPayButton
-                appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-                toAddress={getAddress(MiniKit.user!.walletAddress)}
-                toChain={mantleMNT.chainId}
-                toUnits={paymentAmount}
-                toToken={getAddress(mantleMNT.token)}
-                redirectReturnUrl={getReturnDeepLink()}
-                metadata={{
-                  appName: "WorldApp Mini Test",
-                }}
-                onPaymentStarted={handlePaymentStarted}
-                onPaymentCompleted={handlePaymentCompleted}
-                onPaymentBounced={handlePaymentBounced}
-              />
-            )}
+            <DaimoPayButton
+              appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
+              toAddress={getAddress(MiniKit.user!.walletAddress)}
+              toChain={mantleMNT.chainId}
+              toUnits={paymentAmount}
+              toToken={getAddress(mantleMNT.token)}
+              redirectReturnUrl={getReturnDeepLink()}
+              metadata={{
+                appName: "WorldApp Mini Test",
+              }}
+              onPaymentStarted={handlePaymentStarted}
+              onPaymentCompleted={handlePaymentCompleted}
+              onPaymentBounced={handlePaymentBounced}
+            />
           </div>
         )}
       </>
