@@ -270,6 +270,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  height: 54px;
 }
 
 .withdrawButton {
@@ -296,32 +297,50 @@
   justify-content: center;
   background-color: #4285F4;
   border-radius: 40px;
-  padding: 10px;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  height: 54px;
 }
 
+/* Style for the clickable pay button */
 .addButtonWrapper > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0;
 }
 
-.addButtonWrapper > div > button {
-  background-color: #4285F4;
+/* Hide all the Daimo button styling completely */
+.addButtonWrapper > div > button,
+.addButtonWrapper > div > button * {
+  opacity: 0;
+  background: transparent !important;
+  border: none !important;
+  font-size: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100%;
+  height: 100%;
+}
+
+/* Style for the visible text replacing the Daimo button */
+.addButtonWrapper::after {
+  content: "+ Sumar dinero";
   color: white;
-  border: none;
   font-size: 16px;
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 6px 16px;
-  width: 100%;
-}
-
-.addButtonWrapper > div > button::before {
-  content: "+ Sumar dinero";
+  z-index: 1;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  width: auto;
 }
 
 .statusMessage {
