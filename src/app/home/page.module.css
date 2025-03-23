@@ -25,7 +25,7 @@
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  background-color: white;
+  background: linear-gradient(to bottom, #ffffff, #f0f4ff, #ffffff);
   min-height: calc(100vh - 40px);
   padding: 20px;
   position: relative;
@@ -59,12 +59,22 @@
   border-radius: 10px;
 }
 
+.quote {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 30px;
+  font-style: italic;
+  padding: 0 20px;
+}
+
 .card {
   border-radius: 16px;
   border: 1px solid #f0f0f0;
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: #fafafa;
 }
 
 .cardContent {
@@ -96,95 +106,185 @@
   line-height: 1.1;
 }
 
-.description {
+.growthInfo {
   font-size: 16px;
   color: #666;
-  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .avatarContainer {
-  width: 80px;
-  height: 80px;
+  width: 135px;
+  height: 135px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #b2dfdb;
   position: relative;
 }
 
-.avatarYoung {
-  width: 100%;
-  height: 100%;
-  background-color: #b2dfdb;
+.avatarContainer img {
+  object-fit: cover;
   border-radius: 50%;
-  position: relative;
 }
 
-.avatarYoung:before {
-  content: '';
-  position: absolute;
+.nextPaymentCard {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 20px;
+}
+
+.calendarIcon {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background-color: #333;
-  top: 10px;
-  left: 20px;
-}
-
-.avatarYoung:after {
-  content: '';
-  position: absolute;
-  width: 30px;
-  height: 10px;
-  background-color: #fff;
+  background-color: #ffd180;
   border-radius: 10px;
-  bottom: 20px;
-  left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
 }
 
-.avatarOld {
-  width: 100%;
-  height: 100%;
-  background-color: #b2dfdb;
-  border-radius: 50%;
+.calendarBody {
+  width: 24px;
+  height: 24px;
+  background-color: #ffd180;
   position: relative;
 }
 
-.avatarOld:before {
+.calendarBody:before {
   content: '';
   position: absolute;
+  width: 20px;
+  height: 14px;
+  border: 2px solid #ff9800;
+  border-radius: 2px;
+  top: 5px;
+  left: 2px;
+}
+
+.paymentInfo {
+  font-size: 15px;
+  color: #333;
+  flex: 1;
+}
+
+.trustedPersonCard {
+  display: flex;
+  padding: 16px;
+  background-color: #f0f0f0;
+  border-radius: 16px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  opacity: 0.75;
+}
+
+.personIcon {
   width: 40px;
   height: 40px;
+  background-color: #d0d0d0;
   border-radius: 50%;
-  background-color: #f5f5f5;
-  top: 10px;
-  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  align-self: flex-start;
+  margin-top: 5px;
 }
 
-.avatarOld:after {
+.personBody {
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+
+.personBody:before {
   content: '';
   position: absolute;
-  width: 30px;
-  height: 10px;
-  background-color: #333;
-  border-radius: 10px;
-  bottom: 20px;
-  left: 25px;
+  width: 14px;
+  height: 14px;
+  background-color: #888888;
+  border-radius: 50%;
+  top: 0;
+  left: 5px;
 }
 
-.startButton {
+.personBody:after {
+  content: '';
   position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
+  width: 20px;
+  height: 10px;
+  background-color: #888888;
+  border-radius: 5px 5px 0 0;
+  bottom: 0;
+  left: 2px;
+}
+
+.trustedPersonContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.trustedPersonTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.trustedPersonDesc {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.chooseButton {
+  align-self: flex-end;
+  background-color: transparent;
+  color: #888888;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.actionsContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.withdrawButton, .addButton {
+  flex: 1;
   padding: 16px;
   border-radius: 40px;
-  background-color: #4285F4;
-  color: white;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   border: none;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.withdrawButton {
+  background-color: white;
+  color: #4285F4;
+  border: 2px solid #4285F4;
+}
+
+.addButton {
+  background-color: #4285F4;
+  color: white;
+}
+
+.minusIcon, .plusIcon {
+  font-size: 20px;
+  margin-right: 8px;
+  font-weight: bold;
 } 
