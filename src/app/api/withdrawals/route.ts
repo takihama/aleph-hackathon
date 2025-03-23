@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     // Insert the withdrawal record
     await db.query(
-      "INSERT INTO withdrawals (id, worldcoin_address, status) VALUES ($1, $2, $3, $4)",
+      "INSERT INTO withdrawals (id, worldcoin_address, status) VALUES ($1, $2, $3)",
       [id, worldcoin_address, "pending"]
     );
 
