@@ -1,0 +1,125 @@
+.splashContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 402px;
+  height: 874px;
+  margin: 0 auto;
+  background-color: rgb(255, 255, 255); /* From Figma: r:1, g:1, b:1 */
+  position: relative;
+}
+
+.contentFrame {
+  display: flex;
+  flex-direction: column;
+  width: 287px;
+  gap: 24px;
+  position: absolute;
+  top: 389.5px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  color: rgb(0, 122, 255); /* From Figma: r:0, g:0.47843137383461, b:1 */
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.tagline {
+  font-size: 18px;
+  color: rgb(142, 142, 147); /* From Figma: r:0.5568627715110779, g:0.5568627715110779, b:0.5764706134796143 */
+  margin: 0;
+  margin-top: 24px; /* Match the itemSpacing from Figma */
+  width: 100%;
+  text-align: center;
+}
+
+.circleButton {
+  position: absolute;
+  bottom: 55px; /* Calculated from 874px height minus 763px y-position and adjusted slightly */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: rgb(0, 122, 255); /* From Figma: r:0, g:0.47843137383461, b:1 */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.circleButton:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+.circleButton:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+/* Intro text animation styles */
+.introTextContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 100%;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.introText {
+  font-size: 28px;
+  font-weight: 500;
+  color: rgb(0, 122, 255);
+  text-align: center;
+  line-height: 1.4;
+  max-width: 300px;
+}
+
+.fadeIn {
+  opacity: 1;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.fadeOut {
+  opacity: 0;
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* SVG now points right naturally, no need for rotation */
+
+/* Make SVG rotate to match Figma data */
+/* 
+.circleButton svg {
+  transform: rotate(-90deg);
+}
+*/ 

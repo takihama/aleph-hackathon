@@ -12,6 +12,7 @@ import { DaimoPayButton } from "@daimo/pay";
 import styles from "./page.module.css";
 import { createWorldAppDeepLink } from "@/lib/deeplink";
 import { ethers } from "ethers";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
@@ -21,6 +22,8 @@ export default function Home() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [userSaved, setUserSaved] = useState(false);
+  const router = useRouter();
+
   // Single useEffect for initializing the app and loading user data
   useEffect(() => {
     const initializeApp = async () => {
@@ -62,6 +65,11 @@ export default function Home() {
       fetchUserDetails();
     }
   }, [userSaved]);
+
+  useEffect(() => {
+    // Redirect to the splash screen when the app loads
+    router.push("/splash");
+  }, [router]);
 
   // Function to fetch user details from our database
   const fetchUserDetails = async () => {

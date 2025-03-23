@@ -8,8 +8,8 @@ import { DaimoProviders } from "@/components/DaimoProviders";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "WorldApp Mini",
-  description: "A WorldApp Mini Application",
+  title: "Senda | Cuida a quien vas a ser mañana",
+  description: "Una aplicación para planificar tu retiro y futuro financiero",
 };
 
 export default function RootLayout({
