@@ -266,16 +266,6 @@ export default function Home() {
     setStatus("Payment bounced. Please try again later.");
   };
 
-  // Handle payment amount change
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Ensure valid number format
-    const value = e.target.value;
-    // Allow empty input, numbers, and numbers with decimal point
-    if (value === "" || /^\d+(\.\d{0,2})?$/.test(value)) {
-      setPaymentAmount(value);
-    }
-  };
-
   // Generate a dynamic deep link that uses the current path
   const getReturnDeepLink = () => {
     // Get current path if available, otherwise use a default path
@@ -347,7 +337,9 @@ export default function Home() {
 
             <DaimoPayButton
               appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-              toAddress={getAddress(MiniKit.user!.walletAddress)}
+              toAddress={getAddress(
+                process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS!
+              )}
               toChain={mantleMNT.chainId}
               toUnits={paymentAmount}
               toToken={getAddress(mantleMNT.token)}
