@@ -8,7 +8,7 @@ export default function StartPage() {
 
   useEffect(() => {
     // Redirect to the home page
-    router.replace("/home");
+    router.replace("/splash");
   }, [router]);
 
   // Return empty div while redirecting
