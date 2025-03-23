@@ -40,7 +40,7 @@ export default function OnboardingPage3() {
           <Link href="/onboarding/2" className={styles.backButton}>
             <span className={styles.arrowIcon}>←</span>
           </Link>
-          <Link href="/onboarding/4" className={styles.nextButton}>
+          <Link href="/onboarding/3.5" className={styles.nextButton}>
             <span className={styles.arrowIcon}>→</span>
           </Link>
         </div>

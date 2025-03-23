@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  max-width: 100%;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, #ffffff, #e8eeff, #ffffff);
+  padding: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.messageContainer {
+  width: 100%;
+  position: relative;
+  margin-bottom: 160px;
+  padding: 0 24px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.messageLine {
+  font-size: 26px;
+  line-height: 1.5;
+  margin: 12px 0;
+  text-align: center;
+  color: #333;
+  animation: fadeIn 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  transform-origin: center;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(30px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pagination {
+  display: none;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #DDDDDD;
+}
+
+.activeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #407BFF;
+}
+
+.navigation {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  left: 0;
+}
+
+.backButton, .nextButton {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #407BFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(64, 123, 255, 0.3);
+}
+
+.arrowIcon {
+  display: inline-block;
+} 
