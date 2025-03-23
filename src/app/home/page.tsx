@@ -22,8 +22,8 @@ export default function HomePage() {
   const [userDetails, setUserDetails] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
-  const [balance, setBalance] = useState("100");
-  const [futureBalance, setFutureBalance] = useState("1.352,7");
+  const [balance, setBalance] = useState("-");
+  const [futureBalance, setFutureBalance] = useState("-");
   
   // Initialize app and check if MiniKit is installed
   useEffect(() => {
@@ -76,10 +76,10 @@ export default function HomePage() {
       const annualRate = 0.055;
       
       // Compound interest formula: FV = PV * (1 + r)^n
-      const futureValue = currentBalance * Math.pow(1 + annualRate, years);
+      const futureValue = currentBalance <= 0 ? 0 : currentBalance * Math.pow(1 + annualRate, years);
       
       // Format with thousands separator and comma as decimal separator (Spanish format)
-      const formatted = new Intl.NumberFormat('es-ES', {
+      const formatted = isNaN(futureValue) ? "-" : new Intl.NumberFormat('es-ES', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2
       }).format(futureValue);
