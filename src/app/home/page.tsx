@@ -278,9 +278,10 @@ export default function HomePage() {
     setStatus("Payment started! Check your wallet app.");
   };
 
-  const handlePaymentCompleted = async () => {
+  const handlePaymentCompleted = async (data: any) => {
     setStatus("Payment completed successfully!");
-    router.push("/home/success");
+    const amount = data?.amount || '0';
+    router.push(`/home/success?amount=${amount}`);
   };
 
   const handlePaymentBounced = async () => {
@@ -387,7 +388,7 @@ export default function HomePage() {
                     appName: "Senda",
                   }}
                   onPaymentStarted={handlePaymentStarted}
-                  onPaymentCompleted={handlePaymentCompleted}
+                  onPaymentCompleted={(data) => handlePaymentCompleted(data)}
                   onPaymentBounced={handlePaymentBounced}
                 />
               </div>

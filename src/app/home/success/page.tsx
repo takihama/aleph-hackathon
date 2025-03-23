@@ -1,10 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 
 export default function SuccessPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [amount, setAmount] = useState('0');
+  
+  useEffect(() => {
+    const amountParam = searchParams.get('amount') || '0';
+    setAmount(amountParam);
+  }, [searchParams]);
   
   const handleReturn = () => {
     router.push("/home");
@@ -20,7 +28,7 @@ export default function SuccessPage() {
         </div>
         
         <h1 className={styles.title}>
-          ¡Agregaste $100 USD
+          ¡Agregaste ${amount} USD
           <br />a tu fondo de retiro!
         </h1>
         
