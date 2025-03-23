@@ -14,6 +14,21 @@ export default function SuccessPage() {
     setAmount(amountParam);
   }, [searchParams]);
   
+  const formattedAmount = () => {
+    const num = parseFloat(amount);
+    if (isNaN(num)) return '0';
+    
+    // Show 2 decimal places for values less than 1 or with decimal part
+    // Otherwise show 0 decimal places for whole numbers
+    const hasDecimal = num % 1 !== 0;
+    const isSmall = num < 1;
+    
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: (isSmall || hasDecimal) ? 2 : 0,
+      maximumFractionDigits: 2
+    }).format(num);
+  };
+
   const handleReturn = () => {
     router.push("/home");
   };
@@ -28,7 +43,7 @@ export default function SuccessPage() {
         </div>
         
         <h1 className={styles.title}>
-          ¡Agregaste ${amount} USD
+          ¡Agregaste ${formattedAmount()} USD
           <br />a tu fondo de retiro!
         </h1>
         
