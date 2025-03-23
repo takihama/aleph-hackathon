@@ -32,9 +32,31 @@ export async function GET() {
       )
     `);
     
+    // Create logs table if it doesn't exist
+    await query(`
+      CREATE TABLE IF NOT EXISTS logs (
+        id VARCHAR(255) PRIMARY KEY
+      )
+    `);
+
+    // Check if we can see the table
+    const tableCheck = await query(`
+      SELECT EXISTS (
+        SELECT FROM pg_tables
+        WHERE schemaname = 'public'
+        AND tablename = 'logs'
+      )
+    `);
+
+    // Count existing logs
+    const countResult = await query(`SELECT COUNT(*) FROM logs`);
+    const count = countResult.rows[0].count;
+
     return NextResponse.json({
       success: true,
       message: "Database tables created successfully",
+      table_exists: tableCheck.rows[0].exists,
+      logs_count: count
     });
   } catch (error) {
     console.error("Error setting up database:", error);
