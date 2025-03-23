@@ -10,10 +10,11 @@ export default function OnboardingPage7() {
   const [selectedOption, setSelectedOption] = useState("equilibrio");
 
   const handleContinue = () => {
-    // Mark onboarding as completed
-    localStorage.setItem("onboardingCompleted", "true");
-    // Then navigate to home page
-    router.push("/home");
+    // Save risk preference
+    localStorage.setItem("riskPreference", selectedOption);
+    
+    // Navigate to page 8 for risk selection
+    router.push("/onboarding/8");
   };
 
   return (

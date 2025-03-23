@@ -78,7 +78,19 @@ export default function HomePage() {
       }
 
       const years = 30;
-      const annualRate = 0.055 + Math.random() * (0.12 - 0.055);
+      
+      // Use saved yield from risk selection or default to random
+      let annualRate = 0.085; // Default medium risk (8.5%)
+      
+      if (typeof window !== 'undefined') {
+        const savedYield = localStorage.getItem("yield");
+        if (savedYield) {
+          annualRate = parseFloat(savedYield) / 100;
+        } else {
+          // Fallback to random if no saved yield
+          annualRate = 0.055 + Math.random() * (0.12 - 0.055);
+        }
+      }
 
       // Update the annual rate display
       setAnnualRateDisplay(
