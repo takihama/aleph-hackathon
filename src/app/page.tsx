@@ -14,7 +14,7 @@ import { createWorldAppDeepLink } from "@/lib/deeplink";
 import { ethers } from "ethers";
 
 export default function Home() {
-  const [user, setUser] = useState(MiniKit.user ?? null);
+  const [isInstalled, setIsInstalled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
@@ -29,34 +29,7 @@ export default function Home() {
 
         // First check if user is already authenticated in MiniKit
         if (MiniKit.isInstalled()) {
-          useEffect(() => {
-            const interval = setInterval(() => {
-              if (MiniKit.user && MiniKit.user) {
-                setUser(MiniKit.user);
-              }
-            }, 1000); // Poll every second
-
-            return () => clearInterval(interval); // Cleanup on unmount
-          }, [user && !user]);
-
-          await authenticateWallet();
-
-          // Check if we already have wallet address in MiniKit
-          if (MiniKit.user?.walletAddress) {
-            setWalletAddress(MiniKit.user.walletAddress);
-            console.log("User already authenticated:", MiniKit.user);
-
-            // Try to fetch user details from our database
-            await fetchUserDetails(MiniKit.user.walletAddress);
-          } else {
-            // Need to authenticate
-            console.log("User not authenticated, authenticating...");
-          }
-
-          // Request notification permissions
-          await requestPermission();
-        } else {
-          console.log("MiniKit not installed or running outside WorldApp");
+          setIsInstalled(true);
         }
       } catch (error: any) {
         console.error("Error initializing app:", error);
@@ -67,7 +40,13 @@ export default function Home() {
     };
 
     initializeApp();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
+
+  useEffect(() => {
+    if (isInstalled) {
+      authenticateWallet();
+    }
+  }, [isInstalled]);
 
   // Function to fetch user details from our database
   const fetchUserDetails = async (worldcoin_address: string) => {
@@ -330,7 +309,7 @@ export default function Home() {
         </div>
 
         {/* Add the payment section */}
-        {walletAddress && (
+        {
           <div className={styles.paymentSection}>
             <h3>Make a Payment</h3>
 
@@ -350,7 +329,7 @@ export default function Home() {
               onPaymentBounced={handlePaymentBounced}
             />
           </div>
-        )}
+        }
       </>
 
       {status && (
