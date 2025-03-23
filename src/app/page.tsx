@@ -60,7 +60,7 @@ export default function Home() {
         )}`
       );
       const data = await response.json();
-
+      setStatus(`User details fetched: ${JSON.stringify(data)}`);
       if (response.ok && data.success && data.user) {
         setUserDetails(data.user);
         console.log("User details loaded from database:", data.user);
@@ -222,11 +222,11 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Authentication error:", error);
-      setStatus(
-        `Error authenticating: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
+      // setStatus(
+      //   `Error authenticating: ${
+      //     error instanceof Error ? error.message : "Unknown error"
+      //   }`
+      // );
       return null;
     } finally {
       setLoading(false);
