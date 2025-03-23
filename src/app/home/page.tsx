@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { DaimoPayButton } from "@daimo/pay";
 import { getAddress } from "viem";
-import { mantleMNT, mantleUSDT } from "@daimo/contract";
+import { mantleMNT } from "@daimo/contract";
 import { createWorldAppDeepLink } from "@/lib/deeplink";
 import {
   MiniKit,
@@ -71,7 +71,7 @@ export default function HomePage() {
   useEffect(() => {
     try {
       // Calculate future value with 5.5% annual growth for 30 years
-      const currentBalance = parseFloat(balance.replace(',', '.'));
+      const currentBalance = parseFloat(balance.replace(/\./g, '').replace(',', '.'));
       const years = 30;
       const annualRate = 0.055;
       
@@ -80,8 +80,8 @@ export default function HomePage() {
       
       // Format with thousands separator and comma as decimal separator (Spanish format)
       const formatted = new Intl.NumberFormat('es-ES', {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
       }).format(futureValue);
       
       setFutureBalance(formatted);
@@ -155,7 +155,13 @@ export default function HomePage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setBalance(data.balance);
+        // Format to max 2 decimal places
+        const formattedBalance = new Intl.NumberFormat('es-ES', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        }).format(parseFloat(data.balance));
+        
+        setBalance(formattedBalance);
       }
     } catch (error) {
       console.error("Error fetching balance:", error);
@@ -264,7 +270,7 @@ export default function HomePage() {
                   appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
                   toAddress={getAddress(userDetails.address || "")}
                   toChain={mantleMNT.chainId}
-                  toToken={getAddress(mantleUSDT.token)}
+                  toToken={getAddress(mantleMNT.token)}
                   redirectReturnUrl={getReturnDeepLink()}
                   metadata={{
                     appName: "Senda",
