@@ -64,7 +64,7 @@ export default function Home() {
         `/api/users?worldcoin_address=${walletAddress!}`
       );
       const data = await response.json();
-      setStatus(`User details fetched: ${JSON.stringify(data.address)}`);
+      setStatus(`User details fetched: ${JSON.stringify(data.user.address)}`);
       if (response.ok && data.success && data.user) {
         setUserDetails(data.user);
         console.log("User details loaded from database:", data.user);
