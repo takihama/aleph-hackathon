@@ -287,4 +287,49 @@
   font-size: 20px;
   margin-right: 8px;
   font-weight: bold;
+}
+
+.addButtonWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4285F4;
+  border-radius: 40px;
+  padding: 10px;
+}
+
+.addButtonWrapper > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.addButtonWrapper > div > button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 6px 16px;
+  width: 100%;
+}
+
+.addButtonWrapper > div > button::before {
+  content: "+ Sumar dinero";
+}
+
+.statusMessage {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  background-color: #e3f2fd;
+  color: #1565c0;
 } 
