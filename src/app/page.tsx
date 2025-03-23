@@ -47,17 +47,21 @@ export default function Home() {
       setStatus("useEffect is installed");
       requestPermission();
       authenticateWallet();
-      fetchUserDetails();
     }
   }, [isInstalled]);
+
+  useEffect(() => {
+    if (walletAddress) {
+      setStatus("useEffect is walletAddress");
+      fetchUserDetails();
+    }
+  }, [walletAddress]);
 
   // Function to fetch user details from our database
   const fetchUserDetails = async () => {
     try {
       const response = await fetch(
-        `/api/users?worldcoin_address=${encodeURIComponent(
-          MiniKit.user?.walletAddress!
-        )}`
+        `/api/users?worldcoin_address=${walletAddress!}`
       );
       const data = await response.json();
       setStatus(`User details fetched: ${JSON.stringify(data)}`);
