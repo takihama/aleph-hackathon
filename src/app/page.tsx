@@ -44,6 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isInstalled) {
+      setStatus("useEffect is installed");
       requestPermission();
       authenticateWallet();
       fetchUserDetails();
@@ -77,16 +78,14 @@ export default function Home() {
     const requestPermissionPayload: RequestPermissionPayload = {
       permission: Permission.Notifications,
     };
-    const payload = await MiniKit.commandsAsync.requestPermission(
-      requestPermissionPayload
-    );
+
+    await MiniKit.commandsAsync.requestPermission(requestPermissionPayload);
 
     setHasPermission(true);
   }, []);
 
   const sendNotification = async () => {
     setLoading(true);
-    setStatus("Sending notification...");
 
     try {
       // Get the current wallet address from state or try to fetch it
@@ -210,7 +209,7 @@ export default function Home() {
       if (result?.finalPayload.status === "success") {
         const address = result.finalPayload.address;
         setWalletAddress(address);
-        setStatus("Wallet authenticated successfully!");
+        setStatus(`Wallet authenticated successfully! ${userDetails.address}`);
 
         // Now we can save this to the database
         await saveUserToDatabase();
@@ -319,9 +318,7 @@ export default function Home() {
 
             <DaimoPayButton
               appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-              toAddress={getAddress(
-                process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS!
-              )}
+              toAddress={getAddress(userDetails.address)}
               toChain={mantleMNT.chainId}
               toToken={getAddress(mantleMNT.token)}
               redirectReturnUrl={getReturnDeepLink()}
