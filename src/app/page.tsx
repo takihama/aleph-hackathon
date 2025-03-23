@@ -19,7 +19,6 @@ export default function Home() {
   const [hasPermission, setHasPermission] = useState(false);
   const [status, setStatus] = useState("");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [paymentAmount, setPaymentAmount] = useState("10"); // Default payment amount
   const [userDetails, setUserDetails] = useState<any>(null);
 
   // Single useEffect for initializing the app and loading user data
@@ -32,13 +31,13 @@ export default function Home() {
         if (MiniKit.isInstalled()) {
           useEffect(() => {
             const interval = setInterval(() => {
-              if (MiniKit.user && MiniKit.user !== user) {
+              if (MiniKit.user && MiniKit.user) {
                 setUser(MiniKit.user);
               }
             }, 1000); // Poll every second
 
             return () => clearInterval(interval); // Cleanup on unmount
-          }, [user]);
+          }, [user && !user]);
 
           await authenticateWallet();
 
@@ -61,7 +60,11 @@ export default function Home() {
         }
       } catch (error) {
         console.error("Error initializing app:", error);
-        setStatus("Error initializing app. Please refresh and try again.");
+        setStatus(
+          `Error: ${JSON.stringify(
+            error
+          )}`
+        );
       } finally {
         setLoading(false);
       }
@@ -341,7 +344,6 @@ export default function Home() {
                 process.env.NEXT_PUBLIC_DESTINATION_WALLET_ADDRESS!
               )}
               toChain={mantleMNT.chainId}
-              toUnits={paymentAmount}
               toToken={getAddress(mantleMNT.token)}
               redirectReturnUrl={getReturnDeepLink()}
               metadata={{
