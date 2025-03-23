@@ -78,11 +78,11 @@ export default function HomePage() {
       }
 
       const years = 30;
-      
+
       // Use saved yield from risk selection or default to random
       let annualRate = 0.085; // Default medium risk (8.5%)
-      
-      if (typeof window !== 'undefined') {
+
+      if (typeof window !== "undefined") {
         const savedYield = localStorage.getItem("yield");
         if (savedYield) {
           annualRate = parseFloat(savedYield) / 100;
@@ -292,7 +292,8 @@ export default function HomePage() {
 
   const handlePaymentCompleted = async (data: any) => {
     setStatus("Payment completed successfully!");
-    const amount = data?.amount || '0';
+
+    const amount = data?.payment.display.paymentValue || "0";
     router.push(`/home/success?amount=${amount}`);
   };
 
@@ -342,7 +343,9 @@ export default function HomePage() {
             <div className={styles.cardContent}>
               <div className={styles.cardLeft}>
                 <div className={styles.cardLabel}>My senda tomorrow</div>
-                <div className={styles.growthInfo}>In 30 years you would have</div>
+                <div className={styles.growthInfo}>
+                  In 30 years you would have
+                </div>
                 <div className={styles.amount} style={{ color: "#34A853" }}>
                   ${futureBalance}
                 </div>
@@ -360,17 +363,80 @@ export default function HomePage() {
 
           <div className={styles.nextPaymentCard}>
             <div className={styles.calendarIcon}>
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="5" width="22" height="20" rx="2" fill="#FFEFC3" />
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 28 28"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="22"
+                  height="20"
+                  rx="2"
+                  fill="#FFEFC3"
+                />
                 <rect x="3" y="5" width="22" height="6" fill="#FFD579" />
-                <path d="M9 3V7" stroke="#555555" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M19 3V7" stroke="#555555" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M3 11H25" stroke="#555555" strokeWidth="1.5" strokeLinecap="round" />
-                <rect x="7" y="15" width="4" height="2" rx="0.5" fill="#FFB730" />
-                <rect x="7" y="19" width="4" height="2" rx="0.5" fill="#FFB730" />
-                <rect x="13" y="15" width="4" height="2" rx="0.5" fill="#FFB730" />
-                <rect x="13" y="19" width="4" height="2" rx="0.5" fill="#FFB730" />
-                <rect x="19" y="15" width="2" height="2" rx="0.5" fill="#FFB730" />
+                <path
+                  d="M9 3V7"
+                  stroke="#555555"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M19 3V7"
+                  stroke="#555555"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M3 11H25"
+                  stroke="#555555"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+                <rect
+                  x="7"
+                  y="15"
+                  width="4"
+                  height="2"
+                  rx="0.5"
+                  fill="#FFB730"
+                />
+                <rect
+                  x="7"
+                  y="19"
+                  width="4"
+                  height="2"
+                  rx="0.5"
+                  fill="#FFB730"
+                />
+                <rect
+                  x="13"
+                  y="15"
+                  width="4"
+                  height="2"
+                  rx="0.5"
+                  fill="#FFB730"
+                />
+                <rect
+                  x="13"
+                  y="19"
+                  width="4"
+                  height="2"
+                  rx="0.5"
+                  fill="#FFB730"
+                />
+                <rect
+                  x="19"
+                  y="15"
+                  width="2"
+                  height="2"
+                  rx="0.5"
+                  fill="#FFB730"
+                />
               </svg>
             </div>
             <div className={styles.paymentInfo}>
@@ -383,11 +449,10 @@ export default function HomePage() {
               <div className={styles.personBody}></div>
             </div>
             <div className={styles.trustedPersonContent}>
-              <div className={styles.trustedPersonTitle}>
-                Trusted person
-              </div>
+              <div className={styles.trustedPersonTitle}>Trusted person</div>
               <div className={styles.trustedPersonDesc}>
-                Choose someone you trust, in case you ever can't continue your path
+                Choose someone you trust, in case you ever can't continue your
+                path
               </div>
               <button className={styles.chooseButton}>Choose</button>
             </div>
