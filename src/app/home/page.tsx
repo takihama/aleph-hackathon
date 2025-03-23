@@ -25,7 +25,7 @@ export default function HomePage() {
   const [balance, setBalance] = useState("-");
   const [futureBalance, setFutureBalance] = useState("-");
   const [annualRateDisplay, setAnnualRateDisplay] = useState("5.5");
-  
+
   // Initialize app and check if MiniKit is installed
   useEffect(() => {
     const initializeApp = async () => {
@@ -60,7 +60,7 @@ export default function HomePage() {
       fetchUserDetails();
     }
   }, [walletAddress]);
-  
+
   // Fetch balance when user details are available
   useEffect(() => {
     if (userDetails?.address) {
@@ -79,24 +79,29 @@ export default function HomePage() {
       
       const years = 30;
       const annualRate = 0.055 + Math.random() * (0.12 - 0.055);
-      
+
       // Update the annual rate display
       setAnnualRateDisplay(
-        new Intl.NumberFormat('en-US', {
+        new Intl.NumberFormat("en-US", {
           minimumFractionDigits: 1,
-          maximumFractionDigits: 1
+          maximumFractionDigits: 1,
         }).format(annualRate * 100)
       );
-      
+
       // Compound interest formula: FV = PV * (1 + r)^n
-      const futureValue = currentBalance <= 0 ? 0 : currentBalance * Math.pow(1 + annualRate, years);
-      
+      const futureValue =
+        currentBalance <= 0
+          ? 0
+          : currentBalance * Math.pow(1 + annualRate, years);
+
       // Format with thousands separator and period as decimal separator
-      const formatted = isNaN(futureValue) ? "-" : new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-      }).format(futureValue);
-      
+      const formatted = isNaN(futureValue)
+        ? "-"
+        : new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2,
+          }).format(futureValue);
+
       setFutureBalance(formatted);
     } catch (error) {
       console.error("Error calculating future balance:", error);
@@ -139,8 +144,32 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
-    
+
     return null;
+  };
+
+  const handleWithdraw = async () => {
+    try {
+      const response = await fetch("/api/withdrawals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          worldcoin_address: walletAddress,
+          amount: balance,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to withdraw funds");
+      }
+
+      const data = await response.json();
+      console.log("Withdrawal request submitted:", data);
+    } catch (error) {
+      console.error("Error withdrawing funds:", error);
+    }
   };
 
   // Fetch user details from the database
@@ -213,7 +242,7 @@ export default function HomePage() {
   const handlePaymentBounced = async () => {
     setStatus("Payment bounced. Please try again later.");
   };
-  
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -225,37 +254,53 @@ export default function HomePage() {
               <div className={styles.menuLine}></div>
             </button>
           </div>
-          
+
           <div className={styles.quote}>
             "Cada paso suma. Y vos ya diste el primero"
           </div>
-          
+
           <div className={styles.card}>
             <div className={styles.cardContent}>
               <div className={styles.cardLeft}>
                 <div className={styles.cardLabel}>Mi senda hoy</div>
-                <div className={styles.growthInfo}>Crece al {annualRateDisplay}% anual 😀</div>
-                <div className={styles.amount} style={{ color: '#4285F4' }}>${balance}</div>
+                <div className={styles.growthInfo}>
+                  Crece al {annualRateDisplay}% anual 😀
+                </div>
+                <div className={styles.amount} style={{ color: "#4285F4" }}>
+                  ${balance}
+                </div>
               </div>
               <div className={styles.avatarContainer}>
-                <Image src="/images/young.png" alt="Young avatar" width={135} height={135} />
+                <Image
+                  src="/images/young.png"
+                  alt="Young avatar"
+                  width={135}
+                  height={135}
+                />
               </div>
             </div>
           </div>
-          
+
           <div className={styles.card}>
             <div className={styles.cardContent}>
               <div className={styles.cardLeft}>
                 <div className={styles.cardLabel}>Mi senda mañana</div>
                 <div className={styles.growthInfo}>En 30 años tendrías</div>
-                <div className={styles.amount} style={{ color: '#34A853' }}>${futureBalance}</div>
+                <div className={styles.amount} style={{ color: "#34A853" }}>
+                  ${futureBalance}
+                </div>
               </div>
               <div className={styles.avatarContainer}>
-                <Image src="/images/old.png" alt="Old avatar" width={135} height={135} />
+                <Image
+                  src="/images/old.png"
+                  alt="Old avatar"
+                  width={135}
+                  height={135}
+                />
               </div>
             </div>
           </div>
-          
+
           <div className={styles.nextPaymentCard}>
             <div className={styles.calendarIcon}>
               <div className={styles.calendarBody}></div>
@@ -264,22 +309,25 @@ export default function HomePage() {
               Tu próximo aporte está agendado para el 25 de abril
             </div>
           </div>
-          
+
           <div className={styles.trustedPersonCard}>
             <div className={styles.personIcon}>
               <div className={styles.personBody}></div>
             </div>
             <div className={styles.trustedPersonContent}>
-              <div className={styles.trustedPersonTitle}>Persona de confianza</div>
+              <div className={styles.trustedPersonTitle}>
+                Persona de confianza
+              </div>
               <div className={styles.trustedPersonDesc}>
-                Elige a alguien en quien confíes, por si alguna vez no puedes continuar tu senda
+                Elige a alguien en quien confíes, por si alguna vez no puedes
+                continuar tu senda
               </div>
               <button className={styles.chooseButton}>Elegir</button>
             </div>
           </div>
-          
+
           <div className={styles.actionsContainer}>
-            <button className={styles.withdrawButton}>
+            <button className={styles.withdrawButton} onClick={handleWithdraw}>
               <span className={styles.minusIcon}>−</span>
               Retirar dinero
             </button>
@@ -300,23 +348,16 @@ export default function HomePage() {
                 />
               </div>
             ) : (
-              <button 
-                className={styles.addButton}
-                onClick={authenticateWallet}
-              >
+              <button className={styles.addButton} onClick={authenticateWallet}>
                 <span className={styles.plusIcon}>+</span>
                 Sumar dinero
               </button>
             )}
           </div>
-          
-          {status && (
-            <div className={styles.statusMessage}>
-              {status}
-            </div>
-          )}
+
+          {status && <div className={styles.statusMessage}>{status}</div>}
         </div>
       </div>
     </div>
   );
-} 
+}

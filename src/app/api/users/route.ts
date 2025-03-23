@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: "User saved successfully",
-      userId: result.rows[0].id,
+      id: result.rows[0].id,
     });
   } catch (error) {
     console.error("Error saving user:", error);
