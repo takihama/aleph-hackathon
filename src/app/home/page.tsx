@@ -71,18 +71,10 @@ export default function HomePage() {
   // Calculate future balance
   useEffect(() => {
     try {
-      if (balance === "-") return;
-      
-      // Safely parse the balance string
-      let currentBalance;
-      try {
-        // Remove any formatting characters and parse
-        const balanceStr = balance.replace(/,/g, '');
-        currentBalance = parseFloat(balanceStr);
-        console.log("Parsed balance for calculation:", currentBalance);
-      } catch (err) {
-        console.error("Error parsing balance:", err);
-        currentBalance = 0;
+      // Calculate future value with annual growth for 30 years
+      let currentBalance = 0;
+      if (balance !== "-") {
+        currentBalance = parseFloat(balance.replace(/,/g, ''));
       }
       
       const years = 30;
@@ -105,7 +97,6 @@ export default function HomePage() {
         maximumFractionDigits: 2
       }).format(futureValue);
       
-      console.log("Calculated future value:", futureValue, "Formatted:", formatted);
       setFutureBalance(formatted);
     } catch (error) {
       console.error("Error calculating future balance:", error);
@@ -171,11 +162,6 @@ export default function HomePage() {
   // Fetch balance from API
   const fetchBalance = async () => {
     try {
-      if (!userDetails?.address) {
-        console.log("No address available, skipping balance fetch");
-        return;
-      }
-      
       console.log("Fetching balance for address:", userDetails.address);
       const response = await fetch(
         `/api/balance?address=${userDetails.address}`
@@ -187,7 +173,6 @@ export default function HomePage() {
         const rawBalance = parseFloat(data.balance);
         console.log("Raw balance value:", rawBalance);
         
-        // Always show 2 decimal places for small values
         const formattedBalance = new Intl.NumberFormat('en-US', {
           minimumFractionDigits: rawBalance < 0.1 ? 2 : 0,
           maximumFractionDigits: 2
