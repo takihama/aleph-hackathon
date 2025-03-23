@@ -1,24 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./page.module.css";
+import { Outfit, Manrope } from "next/font/google";
+import ob2Image from "@/assets/ob_2.png";
+
+const outfit = Outfit({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 export default function OnboardingPage2() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.imageContainer}>
-          {/* Replace with actual image later */}
-          <div className={styles.placeholderImage}>
-            {/* Blue illustration of a person looking at a tablet */}
-            <div className={styles.personWithTablet}></div>
-          </div>
+          <Image 
+            src={ob2Image} 
+            alt="Retirement fund illustration"
+            className={styles.image}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         </div>
         
         <div className={styles.textContent}>
-          <h2 className={styles.title}>Tu fonde de retiro, sin complicaciones</h2>
-          <p className={styles.subtitle}>No necesitas saber de inversiones ni finanzas</p>
-          <p className={styles.description}>Tu eliges cuánto, cuándo y cómo</p>
+          <h2 className={`${styles.title} ${outfit.className}`}>Tu fondo de retiro, sin complicaciones</h2>
+          <p className={`${styles.description} ${manrope.className}`}>No necesitas saber de inversiones ni finanzas</p>
+          <p className={`${styles.description} ${manrope.className}`}>Tu eliges cuánto, cuándo y cómo</p>
         </div>
         
         <div className={styles.pagination}>

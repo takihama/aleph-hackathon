@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Outfit } from 'next/font/google'
+import { Manrope, Outfit } from "next/font/google";
 import "./globals.css";
 import MiniKitProvider from "@/components/MiniKitProvider";
 import { DaimoProviders } from "@/components/DaimoProviders";
 
 // Initialize Outfit font
-const outfit = Outfit({ subsets: ['latin'] })
+const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Senda | Cuida a quien vas a ser mañana",
@@ -21,9 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={outfit.className}>
         <MiniKitProvider>
-          <DaimoProviders>
-            {children}
-          </DaimoProviders>
+          <DaimoProviders>{children}</DaimoProviders>
         </MiniKitProvider>
       </body>
     </html>

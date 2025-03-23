@@ -2,55 +2,54 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
   width: 100%;
-  max-width: 402px;
-  height: 874px;
   margin: 0 auto;
-  background-color: rgb(255, 255, 255); /* From Figma: r:1, g:1, b:1 */
+  background-color: rgb(255, 255, 255);
   position: relative;
+  padding: 0;
 }
 
 .contentFrame {
   display: flex;
   flex-direction: column;
-  width: 287px;
+  width: 100%;
+  max-width: 360px;
   gap: 24px;
-  position: absolute;
-  top: 389.5px;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
   animation: fadeIn 0.8s ease-in-out;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .title {
-  font-size: 36px;
+  font-size: 60px;
   font-weight: 700;
-  color: rgb(0, 122, 255); /* From Figma: r:0, g:0.47843137383461, b:1 */
+  color: #407BFF;
   margin: 0;
   width: 100%;
   text-align: center;
+  line-height: 70px;
 }
 
 .tagline {
   font-size: 18px;
-  color: rgb(142, 142, 147); /* From Figma: r:0.5568627715110779, g:0.5568627715110779, b:0.5764706134796143 */
+  color: #888;
   margin: 0;
-  margin-top: 24px; /* Match the itemSpacing from Figma */
+  margin-top: 16px;
   width: 100%;
   text-align: center;
+  line-height: 28px;
 }
 
 .circleButton {
-  position: absolute;
-  bottom: 55px; /* Calculated from 874px height minus 763px y-position and adjusted slightly */
-  left: 50%;
-  transform: translateX(-50%);
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: rgb(0, 122, 255); /* From Figma: r:0, g:0.47843137383461, b:1 */
+  background-color: #407BFF;
   border: none;
   display: flex;
   align-items: center;
@@ -58,14 +57,22 @@
   cursor: pointer;
   transition: transform 0.2s;
   animation: fadeIn 0.8s ease-in-out;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(64, 123, 255, 0.3);
 }
 
-.circleButton:hover {
-  transform: translateX(-50%) scale(1.05);
-}
-
-.circleButton:active {
-  transform: translateX(-50%) scale(0.95);
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  position: absolute;
+  bottom: 120px;
+  width: 100%;
+  left: 0;
 }
 
 /* Intro text animation styles */
