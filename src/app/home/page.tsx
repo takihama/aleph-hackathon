@@ -73,7 +73,7 @@ export default function HomePage() {
       // Calculate future value with 5.5% annual growth for 30 years
       const currentBalance = parseFloat(balance.replace(/\./g, '').replace(',', '.'));
       const years = 30;
-      const annualRate = 0.055;
+      const annualRate = 0.055 + Math.random() * (0.12 - 0.055);
       
       // Compound interest formula: FV = PV * (1 + r)^n
       const futureValue = currentBalance <= 0 ? 0 : currentBalance * Math.pow(1 + annualRate, years);
