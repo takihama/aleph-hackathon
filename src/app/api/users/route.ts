@@ -75,7 +75,7 @@ export async function GET(request: Request) {
     if (worldcoin_address) {
       // Get specific user by address
       result = await query(
-        "SELECT id, address, worldcoin_username, worldcoin_address, created_at, updated_at FROM users WHERE address = $1",
+        "SELECT id, address, worldcoin_username, worldcoin_address, created_at, updated_at FROM users WHERE worldcoin_address = $1",
         [worldcoin_address]
       );
 

@@ -316,19 +316,21 @@ export default function Home() {
           <div className={styles.paymentSection}>
             <h3>Make a Payment</h3>
 
-            <DaimoPayButton
-              appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
-              toAddress={getAddress(userDetails.address)}
-              toChain={mantleMNT.chainId}
-              toToken={getAddress(mantleMNT.token)}
-              redirectReturnUrl={getReturnDeepLink()}
-              metadata={{
-                appName: "WorldApp Mini Test",
-              }}
-              onPaymentStarted={handlePaymentStarted}
-              onPaymentCompleted={handlePaymentCompleted}
-              onPaymentBounced={handlePaymentBounced}
-            />
+            {userDetails?.address && (
+              <DaimoPayButton
+                appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
+                toAddress={getAddress(userDetails.address || "")}
+                toChain={mantleMNT.chainId}
+                toToken={getAddress(mantleMNT.token)}
+                redirectReturnUrl={getReturnDeepLink()}
+                metadata={{
+                  appName: "WorldApp Mini Test",
+                }}
+                onPaymentStarted={handlePaymentStarted}
+                onPaymentCompleted={handlePaymentCompleted}
+                onPaymentBounced={handlePaymentBounced}
+              />
+            )}
           </div>
         }
       </>
