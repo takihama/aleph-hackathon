@@ -4,7 +4,7 @@ import { erc20Abi } from "./erc20.abi";
 const provider = new ethers.JsonRpcProvider("https://rpc.mantle.xyz");
 
 const wallet = ethers.Wallet.fromPhrase(
-  ""
+  process.env.TREASURY_WALLET || ""
 ).connect(provider);
 
 // Token enum to contract address mapping
