@@ -20,7 +20,7 @@ export default function Home() {
   const [status, setStatus] = useState("");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
-
+  const [userSaved, setUserSaved] = useState(false);
   // Single useEffect for initializing the app and loading user data
   useEffect(() => {
     const initializeApp = async () => {
@@ -53,9 +53,15 @@ export default function Home() {
   useEffect(() => {
     if (walletAddress) {
       setStatus("useEffect is walletAddress");
-      fetchUserDetails();
+      saveUserToDatabase();
     }
   }, [walletAddress]);
+
+  useEffect(() => {
+    if (userSaved) {
+      fetchUserDetails();
+    }
+  }, [userSaved]);
 
   // Function to fetch user details from our database
   const fetchUserDetails = async () => {
@@ -148,11 +154,14 @@ export default function Home() {
   // Add a function to save the authenticated user to the database
   const saveUserToDatabase = async () => {
     try {
+      setUserSaved(true);
+
       // Only proceed if we have WorldCoin wallet details
       if (!MiniKit.user?.walletAddress) {
         console.log(
           "No WorldCoin wallet address available, skipping database save"
         );
+
         return;
       }
 
@@ -216,21 +225,12 @@ export default function Home() {
         setWalletAddress(address);
         setStatus(`Wallet authenticated successfully! ${userDetails.address}`);
 
-        // Now we can save this to the database
-        await saveUserToDatabase();
-
         return address; // Return the address for immediate use
       } else {
         setStatus("Authentication failed");
         return null;
       }
     } catch (error) {
-      console.error("Authentication error:", error);
-      // setStatus(
-      //   `Error authenticating: ${
-      //     error instanceof Error ? error.message : "Unknown error"
-      //   }`
-      // );
       return null;
     } finally {
       setLoading(false);
