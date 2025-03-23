@@ -4,12 +4,26 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./splash.module.css";
 import { Outfit, Manrope } from "next/font/google";
+import { useEffect } from "react";
 
 const outfit = Outfit({ subsets: ["latin"] });
 const manrope = Manrope({ subsets: ["latin"] });
 
 export default function SplashScreen() {
   const router = useRouter();
+
+  useEffect(() => {
+    // Set a timeout to show the splash screen for a moment
+    const timer = setTimeout(() => {
+      // Check if onboarding has been completed
+      const onboardingCompleted = localStorage.getItem("onboardingCompleted");
+      if (onboardingCompleted === "true") {
+        router.push("/home");
+      }
+    }, 2000); // 2 seconds delay
+
+    return () => clearTimeout(timer);
+  }, [router]);
 
   const handleGetStarted = () => {
     router.push("/onboarding/1");

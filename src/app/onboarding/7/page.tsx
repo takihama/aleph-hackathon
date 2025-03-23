@@ -10,7 +10,8 @@ export default function OnboardingPage7() {
   const [selectedOption, setSelectedOption] = useState("equilibrio");
 
   const handleContinue = () => {
-    // Store the selected option if needed
+    // Mark onboarding as completed
+    localStorage.setItem("onboardingCompleted", "true");
     // Then navigate to home page
     router.push("/home");
   };
