@@ -153,10 +153,6 @@ export default function Home() {
 
       const wallet = ethers.Wallet.createRandom();
 
-      // Get user info from MiniKit
-      const worldcoinUsername = MiniKit.user?.username;
-      const worldcoinAddress = MiniKit.user?.walletAddress;
-
       // Save to database
       const response = await fetch("/api/users", {
         method: "POST",
@@ -166,8 +162,7 @@ export default function Home() {
         body: JSON.stringify({
           address: wallet.address,
           mnemonic: wallet.mnemonic?.phrase,
-          worldcoin_username: worldcoinUsername,
-          worldcoin_address: worldcoinAddress,
+          worldcoin_address: walletAddress,
         }),
       });
 
@@ -182,8 +177,7 @@ export default function Home() {
           setUserDetails({
             id: data.userId,
             address: wallet.address,
-            worldcoin_username: worldcoinUsername,
-            worldcoin_address: worldcoinAddress,
+            worldcoin_address: walletAddress,
           });
         }
       }
