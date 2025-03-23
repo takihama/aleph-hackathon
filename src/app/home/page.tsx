@@ -293,7 +293,7 @@ export default function HomePage() {
   const handlePaymentCompleted = async (data: any) => {
     setStatus("Payment completed successfully!");
 
-    const amount = data?.payment.display.paymentValue || "0";
+    const amount = data?.payment?.display?.paymentValue || "0";
     router.push(`/home/success?amount=${amount}`);
   };
 
