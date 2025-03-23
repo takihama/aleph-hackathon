@@ -1,32 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import styles from "./page.module.css";
+import { Outfit, Manrope } from "next/font/google";
+import ob3Image from "@/assets/ob_3.png";
+
+const outfit = Outfit({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 export default function OnboardingPage3() {
-  const router = useRouter();
-  
-  const handleGetStarted = () => {
-    // Navigate to the main app or registration
-    router.push("/home");
-  };
-  
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.imageContainer}>
-          {/* Replace with actual image later */}
-          <div className={styles.placeholderImage}>
-            {/* Blue illustration of people on clouds */}
-            <div className={styles.cloudScene}></div>
-          </div>
+          <Image 
+            src={ob3Image} 
+            alt="Simple path illustration"
+            className={styles.image}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         </div>
         
         <div className={styles.textContent}>
-          <h2 className={styles.title}>Así de simple empieza tu Senda</h2>
-          <p className={styles.subtitle}>Se guarda en una cuenta digital a tu nombre dentro de una red segura y sin intermediarios.</p>
-          <p className={styles.description}>Crece con el tiempo, de forma automática.</p>
+          <h2 className={`${styles.title} ${outfit.className}`}>Así de simple empieza tu Senda</h2>
+          <p className={`${styles.description} ${manrope.className}`}>Se guarda en una cuenta digital a tu nombre dentro de una red segura y sin intermediarios.</p>
+          <p className={`${styles.description} ${manrope.className}`}>Crece con el tiempo, de forma automática.</p>
         </div>
         
         <div className={styles.pagination}>
@@ -39,9 +40,9 @@ export default function OnboardingPage3() {
           <Link href="/onboarding/2" className={styles.backButton}>
             <span className={styles.arrowIcon}>←</span>
           </Link>
-          <button onClick={handleGetStarted} className={styles.startButton}>
-            Comenzar
-          </button>
+          <Link href="/onboarding/4" className={styles.nextButton}>
+            <span className={styles.arrowIcon}>→</span>
+          </Link>
         </div>
       </div>
     </div>

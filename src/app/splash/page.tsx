@@ -3,6 +3,10 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./splash.module.css";
+import { Outfit, Manrope } from "next/font/google";
+
+const outfit = Outfit({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -14,8 +18,8 @@ export default function SplashScreen() {
   return (
     <main className={styles.splashContainer}>
       <div className={styles.contentFrame}>
-        <h1 className={styles.title}>Senda</h1>
-        <p className={styles.tagline}>Cuida a quien vas a ser mañana</p>
+        <h1 className={`${styles.title} ${outfit.className}`}>Senda</h1>
+        <p className={`${styles.tagline} ${manrope.className}`}>Cuida a quien vas a ser mañana</p>
       </div>
       
       <button 
