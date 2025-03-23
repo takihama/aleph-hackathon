@@ -24,6 +24,7 @@ export default function HomePage() {
   const [hasPermission, setHasPermission] = useState(false);
   const [balance, setBalance] = useState("-");
   const [futureBalance, setFutureBalance] = useState("-");
+  const [annualRateDisplay, setAnnualRateDisplay] = useState("5.5");
   
   // Initialize app and check if MiniKit is installed
   useEffect(() => {
@@ -75,11 +76,19 @@ export default function HomePage() {
       const years = 30;
       const annualRate = 0.055 + Math.random() * (0.12 - 0.055);
       
+      // Update the annual rate display
+      setAnnualRateDisplay(
+        new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        }).format(annualRate * 100)
+      );
+      
       // Compound interest formula: FV = PV * (1 + r)^n
       const futureValue = currentBalance <= 0 ? 0 : currentBalance * Math.pow(1 + annualRate, years);
       
-      // Format with thousands separator and comma as decimal separator (Spanish format)
-      const formatted = isNaN(futureValue) ? "-" : new Intl.NumberFormat('es-ES', {
+      // Format with thousands separator and period as decimal separator
+      const formatted = isNaN(futureValue) ? "-" : new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2
       }).format(futureValue);
@@ -156,7 +165,7 @@ export default function HomePage() {
 
       if (response.ok && data.success) {
         // Format to max 2 decimal places
-        const formattedBalance = new Intl.NumberFormat('es-ES', {
+        const formattedBalance = new Intl.NumberFormat('en-US', {
           minimumFractionDigits: 0,
           maximumFractionDigits: 2
         }).format(parseFloat(data.balance));
@@ -189,6 +198,7 @@ export default function HomePage() {
 
   const handlePaymentCompleted = async () => {
     setStatus("Payment completed successfully!");
+    router.push("/home/success");
   };
 
   const handlePaymentBounced = async () => {
@@ -215,7 +225,7 @@ export default function HomePage() {
             <div className={styles.cardContent}>
               <div className={styles.cardLeft}>
                 <div className={styles.cardLabel}>Mi senda hoy</div>
-                <div className={styles.growthInfo}>Crece al 5,5% anual 😀</div>
+                <div className={styles.growthInfo}>Crece al {annualRateDisplay}% anual 😀</div>
                 <div className={styles.amount} style={{ color: '#4285F4' }}>${balance}</div>
               </div>
               <div className={styles.avatarContainer}>

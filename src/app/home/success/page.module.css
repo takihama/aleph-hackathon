@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f5f9ff;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  gap: 2rem;
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.message {
+  margin: 0;
+  color: #666;
+  font-size: 18px;
+}
+
+.message p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.signature {
+  font-style: italic;
+  color: #555;
+}
+
+.button {
+  margin-top: 1.5rem;
+  padding: 15px 30px;
+  border-radius: 40px;
+  background-color: #4285F4;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #3367d6;
+} 
