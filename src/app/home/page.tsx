@@ -134,13 +134,13 @@ export default function HomePage() {
         nonce: nonce,
         statement: "Connect your wallet to receive notifications",
       });
-      
+
       console.log("Wallet auth result:", result);
 
       if (result?.finalPayload.status === "success") {
         const address = result.finalPayload.address;
         console.log("Authentication successful, got address:", address);
-        
+
         // Store in localStorage for persistence
         if (typeof window !== "undefined") {
           try {
@@ -149,7 +149,7 @@ export default function HomePage() {
             console.error("Error saving to localStorage:", e);
           }
         }
-        
+
         setWalletAddress(address);
         return address;
       } else {
@@ -217,16 +217,14 @@ export default function HomePage() {
     try {
       // Only use legitimate addresses, never fallbacks
       const addressToUse = userDetails?.address || walletAddress;
-      
+
       if (!addressToUse) {
         console.error("No valid address available for balance fetch");
         return;
       }
-      
+
       console.log("Fetching balance for address:", addressToUse);
-      const response = await fetch(
-        `/api/balance?address=${addressToUse}`
-      );
+      const response = await fetch(`/api/balance?address=${addressToUse}`);
       const data = await response.json();
       console.log("Balance API response:", data);
 
@@ -257,7 +255,7 @@ export default function HomePage() {
         fetchBalance();
       }
     }, 3000);
-    
+
     return () => clearTimeout(timeoutId);
   }, [userDetails, walletAddress]);
 
