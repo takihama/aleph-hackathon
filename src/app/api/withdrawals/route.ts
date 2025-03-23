@@ -4,19 +4,13 @@ import * as db from "@/lib/server/db"; // Correct import path
 
 export async function POST(request: NextRequest) {
   try {
-    const { worldcoin_address, amount } = await request.json();
+    const { worldcoin_address } = await request.json();
 
     // Validate the request data
-    if (
-      !worldcoin_address ||
-      !amount ||
-      isNaN(Number(amount)) ||
-      Number(amount) <= 0
-    ) {
+    if (!worldcoin_address) {
       return NextResponse.json(
         {
-          error:
-            "Invalid withdrawal request. Address and positive amount required.",
+          error: "Invalid withdrawal request. Address required.",
         },
         { status: 400 }
       );
@@ -27,8 +21,8 @@ export async function POST(request: NextRequest) {
 
     // Insert the withdrawal record
     await db.query(
-      "INSERT INTO withdrawals (id, worldcoin_address, amount, status) VALUES ($1, $2, $3, $4)",
-      [id, worldcoin_address, Number(amount), "pending"]
+      "INSERT INTO withdrawals (id, worldcoin_address, status) VALUES ($1, $2, $3, $4)",
+      [id, worldcoin_address, "pending"]
     );
 
     return NextResponse.json({
