@@ -301,15 +301,15 @@ export default function HomePage() {
           </div>
 
           <div className={styles.quote}>
-            "Cada paso suma. Y vos ya diste el primero"
+            "Every step counts. And you've already taken the first one"
           </div>
 
           <div className={styles.card}>
             <div className={styles.cardContent}>
               <div className={styles.cardLeft}>
-                <div className={styles.cardLabel}>Mi senda hoy</div>
+                <div className={styles.cardLabel}>My senda today</div>
                 <div className={styles.growthInfo}>
-                  Crece al {annualRateDisplay}% anual 😀
+                  Grows at {annualRateDisplay}% annually 😀
                 </div>
                 <div className={styles.amount} style={{ color: "#4285F4" }}>
                   ${balance}
@@ -329,8 +329,8 @@ export default function HomePage() {
           <div className={styles.card}>
             <div className={styles.cardContent}>
               <div className={styles.cardLeft}>
-                <div className={styles.cardLabel}>Mi senda mañana</div>
-                <div className={styles.growthInfo}>En 30 años tendrías</div>
+                <div className={styles.cardLabel}>My senda tomorrow</div>
+                <div className={styles.growthInfo}>In 30 years you would have</div>
                 <div className={styles.amount} style={{ color: "#34A853" }}>
                   ${futureBalance}
                 </div>
@@ -362,7 +362,7 @@ export default function HomePage() {
               </svg>
             </div>
             <div className={styles.paymentInfo}>
-              Tu próximo aporte está agendado para el 25 de abril
+              Your next contribution is scheduled for April 25th
             </div>
           </div>
 
@@ -372,20 +372,19 @@ export default function HomePage() {
             </div>
             <div className={styles.trustedPersonContent}>
               <div className={styles.trustedPersonTitle}>
-                Persona de confianza
+                Trusted person
               </div>
               <div className={styles.trustedPersonDesc}>
-                Elige a alguien en quien confíes, por si alguna vez no puedes
-                continuar tu senda
+                Choose someone you trust, in case you ever can't continue your path
               </div>
-              <button className={styles.chooseButton}>Elegir</button>
+              <button className={styles.chooseButton}>Choose</button>
             </div>
           </div>
 
           <div className={styles.actionsContainer}>
             <button className={styles.withdrawButton} onClick={handleWithdraw}>
               <span className={styles.minusIcon}>−</span>
-              Retirar dinero
+              Withdraw
             </button>
             {userDetails?.address ? (
               <div className={styles.addButtonWrapper}>
@@ -406,7 +405,7 @@ export default function HomePage() {
             ) : (
               <button className={styles.addButton} onClick={authenticateWallet}>
                 <span className={styles.plusIcon}>+</span>
-                Sumar dinero
+                Add money
               </button>
             )}
           </div>

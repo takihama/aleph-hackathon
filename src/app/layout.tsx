@@ -8,8 +8,8 @@ import { DaimoProviders } from "@/components/DaimoProviders";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Senda | Cuida a quien vas a ser mañana",
-  description: "Una aplicación para planificar tu retiro y futuro financiero",
+  title: "Senda | Take care of who you will be tomorrow",
+  description: "An application to plan your retirement and financial future",
 };
 
 export default function RootLayout({

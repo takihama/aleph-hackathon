@@ -33,7 +33,7 @@ export default function SplashScreen() {
     <main className={styles.splashContainer}>
       <div className={styles.contentFrame}>
         <h1 className={`${styles.title} ${outfit.className}`}>Senda</h1>
-        <p className={`${styles.tagline} ${manrope.className}`}>Cuida a quien vas a ser mañana</p>
+        <p className={`${styles.tagline} ${manrope.className}`}>Take care of who you will be tomorrow</p>
       </div>
       
       <button 

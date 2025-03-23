@@ -17,11 +17,11 @@ export default function OnboardingPage3Point5() {
   const [autoAdvance, setAutoAdvance] = useState(true);
 
   const messageLines = [
-    "Hola",
-    "Soy vos...",
-    "pero dentro de unos años",
-    "Estoy bien, tranquilo",
-    "Quiero darte las gracias por lo que decidiste comenzar hoy"
+    "Hello",
+    "It's me...",
+    "but in a few years",
+    "I'm fine, calm",
+    "I want to thank you for what you decided to start today"
   ];
 
   const advanceText = useCallback(() => {
