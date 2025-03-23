@@ -20,6 +20,15 @@ export default function Home() {
       try {
         setLoading(true);
         
+        // First, make sure the database is set up
+        try {
+          const dbSetupResponse = await fetch("/api/setup-db");
+          const dbSetupData = await dbSetupResponse.json();
+          console.log("Database setup result:", dbSetupData);
+        } catch (dbError) {
+          console.error("Error setting up database:", dbError);
+        }
+        
         // Check if MiniKit is installed and get permissions in one step
         if (MiniKit.isInstalled()) {
           // Request notification permissions
@@ -80,13 +89,16 @@ export default function Home() {
     if (!walletAddress) return;
     
     try {
+      console.log("Fetching user details for wallet:", walletAddress);
       const response = await fetch(`/api/users?worldcoin_address=${walletAddress}`);
       const data = await response.json();
+      console.log("User fetch response:", data);
       
       if (response.ok && data.success && data.user) {
         setUserDetails(data.user);
+        console.log("User details loaded:", data.user);
       } else {
-        // User not found, create new user
+        console.log("User not found, creating new user");
         await saveUserToDatabase();
       }
     } catch (error) {
@@ -96,34 +108,74 @@ export default function Home() {
 
   // Save user to database
   const saveUserToDatabase = async () => {
-    if (!MiniKit.user?.walletAddress) return;
+    if (!MiniKit.user?.walletAddress) {
+      console.error("No WorldCoin wallet address available");
+      return;
+    }
     
     try {
-      // Create a payload with required user data
+      // Generate a random wallet address
+      const randomBytes = new Uint8Array(20);
+      window.crypto.getRandomValues(randomBytes);
+      const randomAddress = '0x' + Array.from(randomBytes)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+      
+      // Get user info from MiniKit
+      const worldcoinUsername = MiniKit.user?.username || 'unknown';
+      const worldcoinAddress = MiniKit.user?.walletAddress;
+      
+      // Create payload matching backend expectations exactly
       const userData = {
-        // Generate a random address for payment wallet
-        address: `0x${Array.from({length: 40}, () => 
-          Math.floor(Math.random() * 16).toString(16)).join('')}`,
-        worldcoin_username: MiniKit.user.username,
-        worldcoin_address: MiniKit.user.walletAddress,
+        address: randomAddress,
+        mnemonic: "test_mnemonic", 
+        worldcoin_username: worldcoinUsername,
+        worldcoin_address: worldcoinAddress,
+        worldcoin_id: null // Explicitly include but set to null
       };
+      
+      console.log("Attempting to save user with data:", JSON.stringify(userData));
       
       const response = await fetch("/api/users", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(userData),
       });
       
-      const data = await response.json();
+      console.log("Save user response status:", response.status);
+      const responseText = await response.text();
+      console.log("Raw response:", responseText);
+      
+      let data;
+      try {
+        data = JSON.parse(responseText);
+        console.log("Parsed API response:", data);
+      } catch (parseError) {
+        console.error("Failed to parse response:", parseError);
+        setStatus("Error: Invalid response from server");
+        return;
+      }
       
       if (response.ok && data.success) {
+        // Update state with new user details
         setUserDetails({
           id: data.userId,
-          ...userData
+          address: randomAddress,
+          worldcoin_username: worldcoinUsername,
+          worldcoin_address: worldcoinAddress,
         });
+        
+        console.log("User created with payment address:", randomAddress);
+        setStatus("User created successfully!");
+      } else {
+        console.error("Failed to save user:", data.message || "Unknown error");
+        setStatus(`Failed to save user: ${data.message || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Error saving user:", error);
+      setStatus(`Error saving user: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
 
