@@ -157,7 +157,7 @@ export default function Home() {
 
       // Only proceed if we have WorldCoin wallet details
       if (!MiniKit.user?.walletAddress) {
-        console.log(
+        setStatus(
           "No WorldCoin wallet address available, skipping database save"
         );
 
