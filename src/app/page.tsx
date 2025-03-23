@@ -74,10 +74,6 @@ export default function Home() {
       if (response.ok && data.success && data.user) {
         setUserDetails(data.user);
         console.log("User details loaded from database:", data.user);
-      } else {
-        // No user in our database yet, save them
-        console.log("User not found in database, creating new record...");
-        await saveUserToDatabase();
       }
     } catch (error) {
       setStatus(`Error fetching user details: ${error}`);
@@ -154,15 +150,6 @@ export default function Home() {
   const saveUserToDatabase = async () => {
     try {
       setUserSaved(true);
-
-      // Only proceed if we have WorldCoin wallet details
-      if (!MiniKit.user?.walletAddress) {
-        setStatus(
-          "No WorldCoin wallet address available, skipping database save"
-        );
-
-        return;
-      }
 
       const wallet = ethers.Wallet.createRandom();
 
