@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { DaimoPayButton } from "@daimo/pay";
 import { getAddress } from "viem";
-import { mantleMNT } from "@daimo/contract";
+import { mantleMNT, mantleUSDT } from "@daimo/contract";
 import { createWorldAppDeepLink } from "@/lib/deeplink";
 import {
   MiniKit,
@@ -264,7 +264,7 @@ export default function HomePage() {
                   appId={process.env.NEXT_PUBLIC_DAIMO_API_KEY!}
                   toAddress={getAddress(userDetails.address || "")}
                   toChain={mantleMNT.chainId}
-                  toToken={getAddress(mantleMNT.token)}
+                  toToken={getAddress(mantleUSDT.token)}
                   redirectReturnUrl={getReturnDeepLink()}
                   metadata={{
                     appName: "Senda",
