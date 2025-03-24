@@ -11,10 +11,10 @@ export default function IntroScreen() {
   
   // Array of intro texts to display
   const introTexts = [
-    "Cada peso que ahorras hoy...",
-    "... se convierte en seguridad para mañana",
-    "Tu futuro comienza con pequeños pasos",
-    "Bienvenido a Senda"
+    "Every dollar you save today...",
+    "... becomes security for tomorrow",
+    "Your future begins with small steps",
+    "Welcome to Senda"
   ];
 
   useEffect(() => {

@@ -50,7 +50,28 @@ export default function HomePage() {
   useEffect(() => {
     if (isInstalled) {
       requestPermission();
-      authenticateWallet();
+      
+      // Check if we already have a wallet address in localStorage
+      const savedWalletAddress = localStorage.getItem("userWalletAddress");
+      const authExpiry = localStorage.getItem("authExpiry");
+      const now = Date.now();
+      
+      // Check if we have a valid session: address exists and expiry time is in the future
+      if (savedWalletAddress && authExpiry && parseInt(authExpiry) > now) {
+        console.log("Using saved wallet address:", savedWalletAddress);
+        setWalletAddress(savedWalletAddress);
+      } else if (savedWalletAddress) {
+        // If we have an address but expiry is invalid, try to extend the session
+        // instead of full re-authentication which would show the popup
+        console.log("Extending session for existing wallet address");
+        const newExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+        localStorage.setItem("authExpiry", newExpiry.toString());
+        setWalletAddress(savedWalletAddress);
+      } else {
+        // Only attempt full authentication if we have no saved address
+        console.log("No saved wallet address, authenticating");
+        authenticateWallet();
+      }
     }
   }, [isInstalled]);
 
@@ -135,12 +156,27 @@ export default function HomePage() {
   }, []);
 
   // Authenticate wallet and get wallet address
-  const authenticateWallet = async () => {
+  const authenticateWallet = async (retryCount = 0) => {
     setLoading(true);
+    setStatus("Connecting to wallet...");
 
     try {
       console.log("Starting wallet authentication");
       const nonce = Math.random().toString(36).substring(2, 10);
+
+      // Check for existing auth first
+      const savedWalletAddress = localStorage.getItem("userWalletAddress");
+      const authExpiry = localStorage.getItem("authExpiry");
+      const now = Date.now();
+      
+      // If we have valid saved credentials, use them instead of prompting again
+      if (savedWalletAddress && authExpiry && parseInt(authExpiry) > now) {
+        console.log("Using existing authentication");
+        setWalletAddress(savedWalletAddress);
+        setStatus(""); // Clear status
+        setLoading(false);
+        return savedWalletAddress;
+      }
 
       const result = await MiniKit.commandsAsync.walletAuth({
         nonce: nonce,
@@ -157,23 +193,37 @@ export default function HomePage() {
         if (typeof window !== "undefined") {
           try {
             localStorage.setItem("userWalletAddress", address);
+            // Set a timestamp for when authentication occurred (30 days expiry)
+            const authExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+            localStorage.setItem("authExpiry", authExpiry.toString());
           } catch (e) {
             console.error("Error saving to localStorage:", e);
           }
         }
 
         setWalletAddress(address);
+        setStatus(""); // Clear status
         return address;
       } else {
         console.error("Authentication failed or invalid response:", result);
+        // Only show error if final retry
+        if (retryCount >= 2) {
+          setStatus("Authentication failed. Please try again."); 
+        }
       }
     } catch (error) {
       console.error("Error authenticating wallet:", error);
-      // Try again after a delay
-      setTimeout(() => {
-        console.log("Retrying wallet authentication...");
-        authenticateWallet();
-      }, 2000);
+      
+      // Retry automatically with increasing delay, but limit retries
+      if (retryCount < 3) {
+        const delay = 2000 * (retryCount + 1); // Exponential backoff
+        setTimeout(() => {
+          console.log(`Retrying wallet authentication (${retryCount + 1}/3)...`);
+          authenticateWallet(retryCount + 1);
+        }, delay);
+      } else {
+        setStatus("Couldn't connect to wallet. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -292,8 +342,16 @@ export default function HomePage() {
 
   const handlePaymentCompleted = async (data: any) => {
     setStatus("Payment completed successfully!");
-
-    const amount = data?.payment.display.paymentValue || "0";
+    const amount = data?.amount || '0';
+    
+    // Store current wallet state before redirect
+    if (walletAddress) {
+      localStorage.setItem("userWalletAddress", walletAddress);
+      // Set a long expiry to ensure session persists through redirects
+      const authExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+      localStorage.setItem("authExpiry", authExpiry.toString());
+    }
+    
     router.push(`/home/success?amount=${amount}`);
   };
 
@@ -480,7 +538,7 @@ export default function HomePage() {
                 />
               </div>
             ) : (
-              <button className={styles.addButton} onClick={authenticateWallet}>
+              <button className={styles.addButton} onClick={() => authenticateWallet()}>
                 <span className={styles.plusIcon}>+</span>
                 Add money
               </button>
